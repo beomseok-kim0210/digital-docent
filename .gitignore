@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.next/
+out/
+*.tsbuildinfo
+.env
+.env.local
+
+# Orchestration metadata is versioned in its own repository at .bcos/.
+# It must not appear in this repository's commits.
+.bcos/
