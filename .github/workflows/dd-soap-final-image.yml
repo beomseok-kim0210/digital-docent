@@ -1,0 +1,283 @@
+# =============================================================================
+# DD SOAP — FINAL image: clean rebuild from the canonical LOCK SET, then GHCR.
+#
+# Built FROM SCRATCH with --no-cache. Not a retag of the candidate: this proves
+# the lock set reconstructs the environment on its own.
+#
+# Authentication uses only the automatically provided GITHUB_TOKEN. No PAT is
+# requested or created, no interactive login, and package visibility is never
+# changed. If the push needs anything more, the job fails and the operator
+# handles it as HUMAN_ONLY_GATE_GHCR_AUTH.
+#
+# No GPU anywhere. torch.cuda.is_available() being false is expected and is
+# never treated as a failure.
+# =============================================================================
+name: dd-soap-final-image
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Immutable tag. Never 'latest'."
+        required: false
+        default: "qka2-repro-v1"
+      max_jobs:
+        description: "MAX_JOBS for native CUDA extension builds"
+        required: false
+        default: "2"
+      torch_cuda_arch_list:
+        description: "TORCH_CUDA_ARCH_LIST (8.6 = A40 target)"
+        required: false
+        default: "8.6"
+      push_ghcr:
+        description: "Push the validated image to GHCR"
+        type: boolean
+        required: false
+        default: true
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: dd-soap-final-image
+  cancel-in-progress: false
+
+jobs:
+  final:
+    name: final clean build + validate + publish
+    runs-on: ubuntu-22.04
+    timeout-minutes: 350
+
+    steps:
+      - name: Guard against a mutable tag
+        run: |
+          set -eu
+          TAG='${{ inputs.image_tag }}'
+          case "$TAG" in
+            latest|Latest|LATEST|"") echo "refusing mutable tag '$TAG'"; exit 1 ;;
+          esac
+          echo "IMAGE_TAG=$TAG" | tee -a "$GITHUB_ENV"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Require the lock set to exist
+        run: |
+          set -eu
+          missing=0
+          for f in docker/Dockerfile.final docker/requirements-dd-lock.txt \
+                   docker/requirements-dd-torch.txt docker/lockset.json \
+                   docker/requirements-dd-lock.provenance.json \
+                   docker/verify_lock_coverage.py docker/validate_lock.py \
+                   docker/extract_manifest.py docker/validate_runtime.py ; do
+            if [ -f "$f" ]; then echo "OK      $f"; else echo "MISSING $f"; missing=1; fi
+          done
+          [ "$missing" = "0" ] || { echo "lock set incomplete - run M2 first"; exit 1; }
+
+      - name: Runner metrics (before)
+        run: |
+          set -eux
+          echo "RUNNER_CPU=$(nproc)"                                      | tee -a runner-metrics.txt
+          echo "RUNNER_MEMORY=$(free -b | awk '/^Mem:/{print $2}')"        | tee -a runner-metrics.txt
+          echo "RUNNER_DISK_TOTAL_ROOT=$(df -B1 --output=size / | tail -1)" | tee -a runner-metrics.txt
+          echo "RUNNER_DISK_FREE_ROOT=$(df -B1 --output=avail / | tail -1)" | tee -a runner-metrics.txt
+          docker version        | tee -a runner-metrics.txt
+          docker buildx version | tee -a runner-metrics.txt
+
+      - name: Disk safety — reclaim irrelevant preinstalled toolchains
+        run: |
+          set -eu
+          before=$(df -B1 --output=avail / | tail -1)
+          : > disk-cleanup.txt
+          for t in /usr/local/lib/android /usr/share/dotnet /opt/ghc \
+                   /usr/local/.ghcup /opt/hostedtoolcache/CodeQL \
+                   /usr/local/share/powershell /usr/share/swift /opt/az ; do
+            if [ -e "$t" ]; then
+              sz=$(sudo du -sb "$t" 2>/dev/null | cut -f1 || echo 0)
+              sudo rm -rf "$t" || true
+              echo "REMOVED $t bytes=$sz" | tee -a disk-cleanup.txt
+            else
+              echo "ABSENT  $t" | tee -a disk-cleanup.txt
+            fi
+          done
+          after=$(df -B1 --output=avail / | tail -1)
+          echo "ROOT_RECOVERED=$((after-before))" | tee -a disk-cleanup.txt
+
+      - name: Disk safety — relocate Docker data-root to /mnt
+        run: |
+          set -eux
+          sudo systemctl stop docker.socket docker containerd || true
+          sudo rm -rf /var/lib/docker
+          sudo mkdir -p /mnt/docker /etc/docker
+          printf '{"data-root":"/mnt/docker"}\n' | sudo tee /etc/docker/daemon.json
+          sudo systemctl start docker
+          sleep 5
+          docker info --format 'DOCKER_ROOT_DIR={{.DockerRootDir}}' | tee -a disk-cleanup.txt
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver: docker
+
+      - name: Start disk sampler
+        run: |
+          set -eu
+          nohup sh -c 'while true; do
+            printf "%s %s %s\n" "$(date -u +%FT%TZ)" \
+              "$(df -B1 --output=avail /mnt | tail -1)" \
+              "$(df -B1 --output=avail / | tail -1)"
+            sleep 30
+          done' > disk-samples.txt 2>/dev/null &
+          echo $! > sampler.pid
+
+      # -----------------------------------------------------------------------
+      # Clean build. --no-cache is the proof: nothing is inherited from the
+      # candidate. validate_lock.py and verify_lock_coverage.py run as build
+      # layers, so a coverage or pin failure fails the image here.
+      # -----------------------------------------------------------------------
+      - name: Final clean build
+        id: build
+        timeout-minutes: 300
+        run: |
+          set -o pipefail
+          echo "FINAL_BUILD_STARTED_AT=$(date -u +%FT%TZ)" | tee -a build-timing.txt
+          start_ms=$(date +%s%3N)
+          set +e
+          DOCKER_BUILDKIT=1 docker buildx build \
+            --progress=plain \
+            --no-cache \
+            --platform linux/amd64 \
+            --build-arg MAX_JOBS='${{ inputs.max_jobs }}' \
+            --build-arg TORCH_CUDA_ARCH_LIST='${{ inputs.torch_cuda_arch_list }}' \
+            --build-arg FORCE_CUDA=1 \
+            -f docker/Dockerfile.final \
+            -t "dd-soap:${IMAGE_TAG}" \
+            docker/ 2>&1 | tee final-build.log
+          rc=$?
+          set -e
+          end_ms=$(date +%s%3N)
+          {
+            echo "FINAL_BUILD_FINISHED_AT=$(date -u +%FT%TZ)"
+            echo "FINAL_BUILD_ELAPSED_MS=$((end_ms-start_ms))"
+            echo "FINAL_BUILD_EXIT_CODE=$rc"
+          } | tee -a build-timing.txt
+          exit $rc
+
+      - name: Stop disk sampler
+        if: always()
+        run: |
+          if [ -f sampler.pid ]; then kill "$(cat sampler.pid)" 2>/dev/null || true; fi
+          if [ -s disk-samples.txt ]; then
+            echo "DISK_FREE_MNT_MIN=$(awk '{print $2}' disk-samples.txt | sort -n | head -1)"  | tee -a runner-metrics.txt
+            echo "DISK_FREE_ROOT_MIN=$(awk '{print $3}' disk-samples.txt | sort -n | head -1)" | tee -a runner-metrics.txt
+          fi
+
+      - name: Image identity
+        if: success()
+        run: |
+          set -eux
+          docker image inspect "dd-soap:${IMAGE_TAG}" \
+            --format 'FINAL_IMAGE_ID={{.Id}}{{"\n"}}FINAL_IMAGE_SIZE={{.Size}}{{"\n"}}FINAL_IMAGE_ARCH={{.Architecture}}/{{.Os}}' \
+            | tee -a build-timing.txt
+          mkdir -p manifest
+          docker image inspect "dd-soap:${IMAGE_TAG}" > manifest/final-image-inspect.json
+          docker image inspect "dd-soap:${IMAGE_TAG}" \
+            --format '{{range .RootFS.Layers}}{{println .}}{{end}}' > manifest/final-layer-digests.txt
+          wc -l manifest/final-layer-digests.txt
+
+      # -----------------------------------------------------------------------
+      # Runtime re-verification, GPU-free, on the finished image.
+      # -----------------------------------------------------------------------
+      - name: Final validation (no GPU)
+        if: success()
+        run: |
+          set -eux
+          mkdir -p manifest
+          docker run --rm "dd-soap:${IMAGE_TAG}" python -V | tee manifest/final-python-version.txt
+          docker run --rm "dd-soap:${IMAGE_TAG}" pip --version | tee manifest/final-pip-version.txt
+          docker run --rm "dd-soap:${IMAGE_TAG}" python /opt/dd-lock/validate_lock.py \
+            | tee manifest/final-validate-lock.txt
+          docker run --rm "dd-soap:${IMAGE_TAG}" python /opt/dd-lock/verify_lock_coverage.py \
+            /opt/dd-lock/lockset.json /opt/dd-lock/requirements-dd-lock.txt \
+            c94f718efbdf0abdd8bbe9e34e67737744f1310f \
+            | tee manifest/final-lock-coverage.txt
+          docker run --rm -v "$PWD/manifest:/out" "dd-soap:${IMAGE_TAG}" \
+            python /opt/dd-lock/extract_manifest.py /out
+          sudo chown -R "$(id -u):$(id -g)" manifest
+          mv -f manifest/candidate-pip-freeze.txt        manifest/final-pip-freeze.txt
+          mv -f manifest/candidate-pip-check.txt         manifest/final-pip-check.txt
+          mv -f manifest/candidate-direct-urls.json      manifest/final-direct-urls.json
+          mv -f manifest/candidate-python-packages.json  manifest/final-python-packages.json
+          mv -f manifest/candidate-soap-sha.txt          manifest/final-soap-sha.txt
+          mv -f manifest/candidate-apt-packages.txt      manifest/final-apt-packages.txt
+          mv -f manifest/candidate-buildtools.txt        manifest/final-buildtools.txt
+          echo "--- final pip check ---"; cat manifest/final-pip-check.txt
+
+      # -----------------------------------------------------------------------
+      # GHCR. GITHUB_TOKEN only. Visibility is never touched.
+      # -----------------------------------------------------------------------
+      - name: Log in to GHCR
+        if: success() && inputs.push_ghcr
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push to GHCR
+        if: success() && inputs.push_ghcr
+        timeout-minutes: 90
+        run: |
+          set -eux
+          REPO_LC=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          REF="ghcr.io/${REPO_LC}:${IMAGE_TAG}"
+          docker tag "dd-soap:${IMAGE_TAG}" "$REF"
+          docker push "$REF"
+          echo "GHCR_IMAGE=$REF" | tee -a build-timing.txt
+          DIGEST=$(docker image inspect "$REF" --format '{{index .RepoDigests 0}}' | cut -d@ -f2)
+          echo "GHCR_DIGEST=$DIGEST" | tee -a build-timing.txt
+          echo "GHCR_TAG=${IMAGE_TAG}" | tee -a build-timing.txt
+          docker buildx imagetools inspect "$REF" > manifest/ghcr-imagetools.txt 2>&1 || true
+          head -20 manifest/ghcr-imagetools.txt || true
+
+      - name: Observe package visibility (read-only)
+        if: always() && inputs.push_ghcr
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -eu
+          PKG=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
+          OWNER='${{ github.repository_owner }}'
+          # Read only. Visibility is deliberately NOT modified.
+          if gh api "/users/${OWNER}/packages/container/${PKG}" > pkgvis.json 2>/dev/null; then
+            V=$(python3 -c "import json;print(json.load(open('pkgvis.json')).get('visibility','unavailable'))")
+          else
+            V="unavailable (query not permitted with GITHUB_TOKEN)"
+          fi
+          echo "GHCR_VISIBILITY=$V" | tee -a build-timing.txt
+
+      - name: Collect metrics
+        if: always()
+        run: |
+          set -eu
+          mkdir -p manifest
+          cp -f runner-metrics.txt disk-cleanup.txt build-timing.txt manifest/ 2>/dev/null || true
+          cp -f disk-samples.txt final-build.log manifest/ 2>/dev/null || true
+          cp -f docker/lockset.json docker/requirements-dd-lock.txt \
+                docker/requirements-dd-lock.provenance.json manifest/ 2>/dev/null || true
+          python3 docker/collect_metrics.py manifest \
+            "GITHUB_RUN_ID=${{ github.run_id }}" \
+            "GITHUB_SHA=${{ github.sha }}" \
+            "IMAGE_TAG=${{ inputs.image_tag }}"
+          mv -f manifest/candidate-build-metrics.json manifest/final-build-metrics.json
+
+      - name: Upload final evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dd-soap-final-manifest
+          path: manifest/
+          retention-days: 90
+          if-no-files-found: warn
