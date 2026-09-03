@@ -1,0 +1,1341 @@
+{
+  "counts": {
+    "distributions_in_image": 156,
+    "excluded_from_body": 9,
+    "final_git_sha_count": 4,
+    "final_lock_pin_count": 147
+  },
+  "generated_from": {
+    "candidate_build_elapsed_ms": "2894645",
+    "candidate_image_id": "sha256:71981631baa3a718a018f77abe57441fc796dcbce6cabeea15983451814376e5",
+    "candidate_image_size": "18738754045",
+    "github_sha": "2ac3e0d32fdebf9c7766569d9bff4a05f616d1f5",
+    "workflow_run_id": "33714685054"
+  },
+  "packages": {
+    "absl-py": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "absl-py",
+      "source": "pypi",
+      "version": "2.5.0"
+    },
+    "accelerate": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "accelerate",
+      "source": "pypi",
+      "version": "1.14.0"
+    },
+    "adabound": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "adabound",
+      "source": "pypi",
+      "version": "0.0.5"
+    },
+    "annotated-types": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "annotated-types",
+      "source": "pypi",
+      "version": "0.8.0"
+    },
+    "antlr4-python3-runtime": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "antlr4-python3-runtime",
+      "source": "pypi",
+      "version": "4.9.3"
+    },
+    "attrs": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "attrs",
+      "source": "pypi",
+      "version": "26.1.0"
+    },
+    "certifi": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "certifi",
+      "source": "pypi",
+      "version": "2026.7.22"
+    },
+    "cffi": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "cffi",
+      "source": "pypi",
+      "version": "2.1.1"
+    },
+    "charset-normalizer": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "charset-normalizer",
+      "source": "pypi",
+      "version": "3.5.1"
+    },
+    "cholespy": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "cholespy",
+      "source": "pypi",
+      "version": "2.2.0"
+    },
+    "chumpy": {
+      "also_measured_on_pod_2026_09_02": true,
+      "commit_id": "580566eafc9ac68b2614b64d6f7aaa84eebb70da",
+      "in_requirements_body": true,
+      "installed_commit_provenance": "measured_from_candidate_image",
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "chumpy",
+      "requested_revision": "580566eafc9ac68b2614b64d6f7aaa84eebb70da",
+      "sha_selection_provenance": "historically_derived",
+      "sha_selection_reason": "master@2025-08-18T15:12:28Z, default-branch HEAD throughout the run. chumpy/version.py at this SHA is 0.71, matching the pod measurement.",
+      "source": "git",
+      "url": "https://github.com/mattloper/chumpy.git",
+      "vcs": "git",
+      "version": "0.71"
+    },
+    "click": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "click",
+      "source": "pypi",
+      "version": "8.5.0"
+    },
+    "cloudpickle": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "cloudpickle",
+      "source": "pypi",
+      "version": "3.1.2"
+    },
+    "coloredlogs": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "coloredlogs",
+      "source": "pypi",
+      "version": "15.0.1"
+    },
+    "compress-pickle": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "compress-pickle",
+      "source": "pypi",
+      "version": "2.1.0"
+    },
+    "contourpy": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "contourpy",
+      "source": "pypi",
+      "version": "1.3.2"
+    },
+    "cycler": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "cycler",
+      "source": "pypi",
+      "version": "0.12.1"
+    },
+    "dearpygui": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "dearpygui",
+      "source": "pypi",
+      "version": "2.3.1"
+    },
+    "deep3dface": {
+      "also_measured_on_pod_2026_09_02": true,
+      "commit_id": "f0b05f389441a1dcdb75e56b48efd28d8174b676",
+      "in_requirements_body": true,
+      "installed_commit_provenance": "measured_from_candidate_image",
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "deep3dface",
+      "requested_revision": "f0b05f389441a1dcdb75e56b48efd28d8174b676",
+      "sha_selection_provenance": "historically_derived",
+      "sha_selection_reason": "main@2025-04-08T12:55:36Z, default-branch HEAD throughout the run. Version corroboration is weak: the fork is 0.0.1 at every commit.",
+      "source": "git",
+      "url": "https://github.com/TingtingLiao/deep3dface.git",
+      "vcs": "git",
+      "version": "0.0.1"
+    },
+    "diffusers": {
+      "also_measured_on_pod_2026_09_02": true,
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "diffusers",
+      "source": "pypi",
+      "version": "0.27.2"
+    },
+    "dlib": {
+      "also_measured_on_pod_2026_09_02": true,
+      "dedicated_layer": "dlib",
+      "in_requirements_body": false,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "isolation_reason": "Failed inside the aggregate requirements build on the pod (gmake Error 2) and succeeded standalone. Resource exhaustion was hypothesised and DISPROVEN by measurement. ROOT CAUSE UNKNOWN; isolation is a mitigation, not a proven fix.",
+      "measured_at": "2026-09-03",
+      "name": "dlib",
+      "source": "pypi",
+      "version": "20.0.1"
+    },
+    "dominate": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "dominate",
+      "source": "pypi",
+      "version": "2.9.1"
+    },
+    "executing": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "executing",
+      "source": "pypi",
+      "version": "2.2.1"
+    },
+    "face-alignment": {
+      "also_measured_on_pod_2026_09_02": true,
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "face-alignment",
+      "source": "pypi",
+      "version": "1.4.1"
+    },
+    "facenet-pytorch": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "facenet-pytorch",
+      "source": "pypi",
+      "version": "2.5.3"
+    },
+    "filelock": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "filelock",
+      "source": "pypi",
+      "version": "3.32.3"
+    },
+    "flatbuffers": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "flatbuffers",
+      "source": "pypi",
+      "version": "25.12.19"
+    },
+    "fonttools": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "fonttools",
+      "source": "pypi",
+      "version": "4.64.0"
+    },
+    "fsspec": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "fsspec",
+      "source": "pypi",
+      "version": "2026.7.0"
+    },
+    "gitdb": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "gitdb",
+      "source": "pypi",
+      "version": "4.0.12"
+    },
+    "gitpython": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "GitPython",
+      "source": "pypi",
+      "version": "3.1.61"
+    },
+    "grpcio": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "grpcio",
+      "source": "pypi",
+      "version": "1.83.1"
+    },
+    "h5py": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "h5py",
+      "source": "pypi",
+      "version": "3.16.0"
+    },
+    "hickle": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "hickle",
+      "source": "pypi",
+      "version": "5.0.3"
+    },
+    "huggingface-hub": {
+      "also_measured_on_pod_2026_09_02": true,
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "huggingface-hub",
+      "source": "pypi",
+      "version": "0.24.6"
+    },
+    "humanfriendly": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "humanfriendly",
+      "source": "pypi",
+      "version": "10.0"
+    },
+    "idna": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "idna",
+      "source": "pypi",
+      "version": "3.19"
+    },
+    "imageio": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "ImageIO",
+      "source": "pypi",
+      "version": "2.37.4"
+    },
+    "imageio-ffmpeg": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "imageio-ffmpeg",
+      "source": "pypi",
+      "version": "0.4.7",
+      "version_provenance_note": "reported_by_source in SOAP requirements.txt; the pod's installed build was never measured"
+    },
+    "imgaug": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "imgaug",
+      "source": "pypi",
+      "version": "0.4.0"
+    },
+    "importlib-metadata": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "importlib_metadata",
+      "source": "pypi",
+      "version": "9.0.1"
+    },
+    "iopath": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "iopath",
+      "source": "pypi",
+      "version": "0.1.10"
+    },
+    "jax": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "jax",
+      "source": "pypi",
+      "version": "0.4.30"
+    },
+    "jaxlib": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "jaxlib",
+      "source": "pypi",
+      "version": "0.4.30"
+    },
+    "jinja2": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "Jinja2",
+      "source": "pypi",
+      "version": "3.1.6"
+    },
+    "joblib": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "joblib",
+      "source": "pypi",
+      "version": "1.6.0"
+    },
+    "jsonschema": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "jsonschema",
+      "source": "pypi",
+      "version": "4.26.0"
+    },
+    "jsonschema-specifications": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "jsonschema-specifications",
+      "source": "pypi",
+      "version": "2025.9.1"
+    },
+    "kiui": {
+      "also_measured_on_pod_2026_09_02": true,
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "kiui",
+      "source": "pypi",
+      "version": "0.2.17"
+    },
+    "kiwisolver": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "kiwisolver",
+      "source": "pypi",
+      "version": "1.5.1"
+    },
+    "kornia": {
+      "also_measured_on_pod_2026_09_02": true,
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "kornia",
+      "source": "pypi",
+      "version": "0.8.1"
+    },
+    "kornia-rs": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "kornia_rs",
+      "source": "pypi",
+      "version": "0.1.14"
+    },
+    "lazy-loader": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "lazy-loader",
+      "source": "pypi",
+      "version": "0.5"
+    },
+    "lightning-utilities": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "lightning-utilities",
+      "source": "pypi",
+      "version": "0.15.3"
+    },
+    "llvmlite": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "llvmlite",
+      "source": "pypi",
+      "version": "0.49.0"
+    },
+    "markdown": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "Markdown",
+      "source": "pypi",
+      "version": "3.10.3"
+    },
+    "markdown-it-py": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "markdown-it-py",
+      "source": "pypi",
+      "version": "4.2.0"
+    },
+    "markupsafe": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "MarkupSafe",
+      "source": "pypi",
+      "version": "3.0.3"
+    },
+    "matplotlib": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "matplotlib",
+      "source": "pypi",
+      "version": "3.10.9"
+    },
+    "mdurl": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "mdurl",
+      "source": "pypi",
+      "version": "0.1.2"
+    },
+    "mediapipe": {
+      "also_measured_on_pod_2026_09_02": true,
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "mediapipe",
+      "source": "pypi",
+      "version": "0.10.21"
+    },
+    "ml-dtypes": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "ml_dtypes",
+      "source": "pypi",
+      "version": "0.5.4"
+    },
+    "mpmath": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "mpmath",
+      "source": "pypi",
+      "version": "1.3.0"
+    },
+    "munch": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "munch",
+      "source": "pypi",
+      "version": "4.0.0"
+    },
+    "networkx": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "networkx",
+      "source": "pypi",
+      "version": "3.4.2"
+    },
+    "ninja": {
+      "also_measured_on_pod_2026_09_02": true,
+      "dedicated_layer": "build_tools",
+      "in_requirements_body": false,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "ninja",
+      "source": "pypi",
+      "version": "1.13.2"
+    },
+    "numba": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "numba",
+      "source": "pypi",
+      "version": "0.67.0"
+    },
+    "numpy": {
+      "also_measured_on_pod_2026_09_02": true,
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "numpy",
+      "source": "pypi",
+      "version": "1.23.1"
+    },
+    "nvdiffrast": {
+      "also_measured_on_pod_2026_09_02": true,
+      "commit_id": "729261dc64c4241ea36efda84fbf532cc8b425b8",
+      "in_requirements_body": true,
+      "installed_commit_provenance": "measured_from_candidate_image",
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "nvdiffrast",
+      "requested_revision": "729261dc64c4241ea36efda84fbf532cc8b425b8",
+      "sha_selection_provenance": "measured_from_execution_log",
+      "sha_selection_reason": "SHA read from the successful 2026-09-02 install command. Repository HEAD installs as UNKNOWN 0.0.0 with project name 'unknown'.",
+      "source": "git",
+      "url": "https://github.com/NVlabs/nvdiffrast.git",
+      "vcs": "git",
+      "version": "0.3.3"
+    },
+    "nvidia-cublas-cu12": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "nvidia-cublas-cu12",
+      "source": "pypi",
+      "version": "12.1.3.1"
+    },
+    "nvidia-cuda-cupti-cu12": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "nvidia-cuda-cupti-cu12",
+      "source": "pypi",
+      "version": "12.1.105"
+    },
+    "nvidia-cuda-nvrtc-cu12": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "nvidia-cuda-nvrtc-cu12",
+      "source": "pypi",
+      "version": "12.1.105"
+    },
+    "nvidia-cuda-runtime-cu12": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "nvidia-cuda-runtime-cu12",
+      "source": "pypi",
+      "version": "12.1.105"
+    },
+    "nvidia-cudnn-cu12": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "nvidia-cudnn-cu12",
+      "source": "pypi",
+      "version": "8.9.2.26"
+    },
+    "nvidia-cufft-cu12": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "nvidia-cufft-cu12",
+      "source": "pypi",
+      "version": "11.0.2.54"
+    },
+    "nvidia-curand-cu12": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "nvidia-curand-cu12",
+      "source": "pypi",
+      "version": "10.3.2.106"
+    },
+    "nvidia-cusolver-cu12": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "nvidia-cusolver-cu12",
+      "source": "pypi",
+      "version": "11.4.5.107"
+    },
+    "nvidia-cusparse-cu12": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "nvidia-cusparse-cu12",
+      "source": "pypi",
+      "version": "12.1.0.106"
+    },
+    "nvidia-nccl-cu12": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "nvidia-nccl-cu12",
+      "source": "pypi",
+      "version": "2.20.5"
+    },
+    "nvidia-nvjitlink-cu12": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "nvidia-nvjitlink-cu12",
+      "source": "pypi",
+      "version": "12.9.86"
+    },
+    "nvidia-nvtx-cu12": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "nvidia-nvtx-cu12",
+      "source": "pypi",
+      "version": "12.1.105"
+    },
+    "objprint": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "objprint",
+      "source": "pypi",
+      "version": "0.3.0"
+    },
+    "omegaconf": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "omegaconf",
+      "source": "pypi",
+      "version": "2.3.1"
+    },
+    "onnxruntime-gpu": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "onnxruntime-gpu",
+      "source": "pypi",
+      "version": "1.23.2"
+    },
+    "opencv-contrib-python": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "opencv-contrib-python",
+      "source": "pypi",
+      "version": "4.11.0.86"
+    },
+    "opencv-python": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "opencv-python",
+      "source": "pypi",
+      "version": "4.11.0.86"
+    },
+    "opencv-python-headless": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "opencv-python-headless",
+      "source": "pypi",
+      "version": "4.11.0.86"
+    },
+    "opt-einsum": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "opt_einsum",
+      "source": "pypi",
+      "version": "3.4.0"
+    },
+    "packaging": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "packaging",
+      "source": "pypi",
+      "version": "26.3"
+    },
+    "pandas": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "pandas",
+      "source": "pypi",
+      "version": "2.3.3"
+    },
+    "pillow": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "pillow",
+      "source": "pypi",
+      "version": "12.3.0"
+    },
+    "pip": {
+      "also_measured_on_pod_2026_09_02": true,
+      "dedicated_layer": "build_tools",
+      "in_requirements_body": false,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "pip",
+      "source": "pypi",
+      "version": "26.2.1"
+    },
+    "platformdirs": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "platformdirs",
+      "source": "pypi",
+      "version": "4.11.7"
+    },
+    "pooch": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "pooch",
+      "source": "pypi",
+      "version": "1.9.0"
+    },
+    "portalocker": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "portalocker",
+      "source": "pypi",
+      "version": "4.3.0"
+    },
+    "protobuf": {
+      "also_measured_on_pod_2026_09_02": true,
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "protobuf",
+      "source": "pypi",
+      "version": "4.25.8"
+    },
+    "psutil": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "psutil",
+      "source": "pypi",
+      "version": "7.2.2"
+    },
+    "pyarrow": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "pyarrow",
+      "source": "pypi",
+      "version": "25.0.1"
+    },
+    "pycparser": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "pycparser",
+      "source": "pypi",
+      "version": "3.0"
+    },
+    "pydantic": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "pydantic",
+      "source": "pypi",
+      "version": "2.13.5"
+    },
+    "pydantic-core": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "pydantic_core",
+      "source": "pypi",
+      "version": "2.46.5"
+    },
+    "pygments": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "Pygments",
+      "source": "pypi",
+      "version": "2.21.0"
+    },
+    "pymatting": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "PyMatting",
+      "source": "pypi",
+      "version": "1.1.15"
+    },
+    "pymeshlab": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "pymeshlab",
+      "source": "pypi",
+      "version": "2025.7.post1"
+    },
+    "pyparsing": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "pyparsing",
+      "source": "pypi",
+      "version": "3.3.2"
+    },
+    "python-dateutil": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "python-dateutil",
+      "source": "pypi",
+      "version": "2.9.0.post0"
+    },
+    "pytorch3d": {
+      "also_measured_on_pod_2026_09_02": true,
+      "commit_id": "e73a7e7bfc580d1f9225ad9ff7d2c753c320aabd",
+      "in_requirements_body": true,
+      "installed_commit_provenance": "measured_from_candidate_image",
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "pytorch3d",
+      "requested_revision": "e73a7e7bfc580d1f9225ad9ff7d2c753c320aabd",
+      "sha_selection_provenance": "historically_derived",
+      "sha_selection_reason": "main@2026-08-27T13:32:44Z, default-branch HEAD throughout the run. __version__ at this SHA is 0.7.9, matching the pod measurement.",
+      "source": "git",
+      "url": "https://github.com/facebookresearch/pytorch3d.git",
+      "vcs": "git",
+      "version": "0.7.9"
+    },
+    "pytz": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "pytz",
+      "source": "pypi",
+      "version": "2026.3.post1"
+    },
+    "pyyaml": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "PyYAML",
+      "source": "pypi",
+      "version": "6.0.3"
+    },
+    "referencing": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "referencing",
+      "source": "pypi",
+      "version": "0.37.0"
+    },
+    "regex": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "regex",
+      "source": "pypi",
+      "version": "2026.9.3"
+    },
+    "rembg": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "rembg",
+      "source": "pypi",
+      "version": "2.0.69"
+    },
+    "requests": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "requests",
+      "source": "pypi",
+      "version": "2.34.2"
+    },
+    "rich": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "rich",
+      "source": "pypi",
+      "version": "15.0.0"
+    },
+    "rpds-py": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "rpds-py",
+      "source": "pypi",
+      "version": "0.30.0"
+    },
+    "safetensors": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "safetensors",
+      "source": "pypi",
+      "version": "0.8.0"
+    },
+    "scikit-image": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "scikit-image",
+      "source": "pypi",
+      "version": "0.24.0"
+    },
+    "scikit-learn": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "scikit-learn",
+      "source": "pypi",
+      "version": "1.7.2"
+    },
+    "scipy": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "scipy",
+      "source": "pypi",
+      "version": "1.13.1"
+    },
+    "sentencepiece": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "sentencepiece",
+      "source": "pypi",
+      "version": "0.2.2"
+    },
+    "sentry-sdk": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "sentry-sdk",
+      "source": "pypi",
+      "version": "2.68.1"
+    },
+    "setuptools": {
+      "also_measured_on_pod_2026_09_02": true,
+      "dedicated_layer": "build_tools",
+      "in_requirements_body": false,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "setuptools",
+      "source": "pypi",
+      "version": "59.6.0"
+    },
+    "shapely": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "shapely",
+      "source": "pypi",
+      "version": "2.1.2"
+    },
+    "six": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "six",
+      "source": "pypi",
+      "version": "1.17.0"
+    },
+    "sk-video": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "sk-video",
+      "source": "pypi",
+      "version": "1.1.10"
+    },
+    "smmap": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "smmap",
+      "source": "pypi",
+      "version": "5.0.3"
+    },
+    "smplx": {
+      "also_measured_on_pod_2026_09_02": true,
+      "commit_id": "05e521dd26b92f3d6e0d6462e58fb15b7d1dbfbe",
+      "dedicated_layer": "smplx_no_deps",
+      "in_requirements_body": false,
+      "install_mode": "--no-deps",
+      "install_mode_reason": "setup.py at the pinned SHA declares 'nvdiffrast @ git+https://github.com/NVlabs/nvdiffrast.git' with no revision. Resolving it pulls mutable HEAD, which conflicts with the verified nvdiffrast revision. pip constraints do not apply to direct URL requirements, so dependency installation is controlled externally instead. Upstream source is NOT patched and the smplx SHA is unchanged.",
+      "installed_commit_provenance": "measured_from_candidate_image",
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "smplx",
+      "requested_revision": "05e521dd26b92f3d6e0d6462e58fb15b7d1dbfbe",
+      "sha_selection_provenance": "historically_derived",
+      "sha_selection_reason": "main@2025-06-24T00:52:08Z, default-branch HEAD throughout the run. Version corroboration is weak: the fork is 0.0.1 at every commit.",
+      "source": "git",
+      "url": "https://github.com/TingtingLiao/smplx.git",
+      "vcs": "git",
+      "version": "0.0.1"
+    },
+    "sounddevice": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "sounddevice",
+      "source": "pypi",
+      "version": "0.5.6"
+    },
+    "sympy": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "sympy",
+      "source": "pypi",
+      "version": "1.14.0"
+    },
+    "tensorboard": {
+      "also_measured_on_pod_2026_09_02": true,
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "tensorboard",
+      "source": "pypi",
+      "version": "2.19.0"
+    },
+    "tensorboard-data-server": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "tensorboard-data-server",
+      "source": "pypi",
+      "version": "0.7.2"
+    },
+    "termcolor": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "termcolor",
+      "source": "pypi",
+      "version": "3.3.0"
+    },
+    "threadpoolctl": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "threadpoolctl",
+      "source": "pypi",
+      "version": "3.6.0"
+    },
+    "tifffile": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "tifffile",
+      "source": "pypi",
+      "version": "2025.5.10"
+    },
+    "tokenizers": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "tokenizers",
+      "source": "pypi",
+      "version": "0.19.1"
+    },
+    "torch": {
+      "also_measured_on_pod_2026_09_02": true,
+      "dedicated_layer": "torch_tier",
+      "in_requirements_body": false,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "torch",
+      "source": "pypi",
+      "version": "2.3.1+cu121"
+    },
+    "torch-scatter": {
+      "also_measured_on_pod_2026_09_02": true,
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "torch-scatter",
+      "source": "pypi",
+      "version": "2.1.2"
+    },
+    "torch-sparse": {
+      "also_measured_on_pod_2026_09_02": true,
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "torch-sparse",
+      "source": "pypi",
+      "version": "0.6.18"
+    },
+    "torchaudio": {
+      "also_measured_on_pod_2026_09_02": true,
+      "dedicated_layer": "torch_tier",
+      "in_requirements_body": false,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "torchaudio",
+      "source": "pypi",
+      "version": "2.3.1+cu121"
+    },
+    "torchfile": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "torchfile",
+      "source": "pypi",
+      "version": "0.1.0"
+    },
+    "torchmetrics": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "torchmetrics",
+      "source": "pypi",
+      "version": "1.9.0"
+    },
+    "torchvision": {
+      "also_measured_on_pod_2026_09_02": true,
+      "dedicated_layer": "torch_tier",
+      "in_requirements_body": false,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "torchvision",
+      "source": "pypi",
+      "version": "0.18.1+cu121"
+    },
+    "tqdm": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "tqdm",
+      "source": "pypi",
+      "version": "4.70.0"
+    },
+    "transformers": {
+      "also_measured_on_pod_2026_09_02": true,
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "transformers",
+      "source": "pypi",
+      "version": "4.44.2"
+    },
+    "trimesh": {
+      "also_measured_on_pod_2026_09_02": true,
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "trimesh",
+      "source": "pypi",
+      "version": "4.7.1"
+    },
+    "triton": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "triton",
+      "source": "pypi",
+      "version": "2.3.1"
+    },
+    "typing-extensions": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "typing_extensions",
+      "source": "pypi",
+      "version": "4.16.0"
+    },
+    "typing-inspection": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "typing-inspection",
+      "source": "pypi",
+      "version": "0.4.4"
+    },
+    "tzdata": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "tzdata",
+      "source": "pypi",
+      "version": "2026.3"
+    },
+    "urllib3": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "urllib3",
+      "source": "pypi",
+      "version": "2.7.0"
+    },
+    "varname": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "varname",
+      "source": "pypi",
+      "version": "1.0.0"
+    },
+    "wandb": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "wandb",
+      "source": "pypi",
+      "version": "0.28.0"
+    },
+    "werkzeug": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "Werkzeug",
+      "source": "pypi",
+      "version": "3.1.8"
+    },
+    "wheel": {
+      "also_measured_on_pod_2026_09_02": true,
+      "dedicated_layer": "build_tools",
+      "in_requirements_body": false,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "wheel",
+      "source": "pypi",
+      "version": "0.48.0"
+    },
+    "xatlas": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "xatlas",
+      "source": "pypi",
+      "version": "0.0.11"
+    },
+    "zipp": {
+      "in_requirements_body": true,
+      "installed_version_provenance": "measured_from_candidate_image",
+      "measured_at": "2026-09-03",
+      "name": "zipp",
+      "source": "pypi",
+      "version": "4.1.0"
+    }
+  },
+  "provenance_rule": "measured_from_candidate_image (2026-09-03) is never relabelled as measured_from_pod_2026_09_02. Distinct measurements of distinct environments. The four historically_derived git SHA selections are never promoted to measured.",
+  "schema": "dd-soap-lock-provenance/1"
+}

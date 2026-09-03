@@ -111,6 +111,18 @@ DLIB_REASON = (
 )
 
 
+def pip_vcs_url(du):
+    """Recombine a PEP 610 direct_url record into a pip-installable requirement.
+
+    direct_url.json stores the bare repository URL in `url` and the VCS scheme
+    separately in vcs_info.vcs, e.g.
+        url = "https://github.com/NVlabs/nvdiffrast.git", vcs = "git"
+    pip needs "git+https://github.com/NVlabs/nvdiffrast.git@<commit>". Emitting
+    the bare URL would make pip treat it as an archive download instead.
+    """
+    return "%s+%s@%s" % (du.get("vcs"), du.get("url"), du.get("commit_id"))
+
+
 def load(path, default=None):
     if not os.path.exists(path):
         return default
@@ -199,7 +211,11 @@ def main() -> int:
         if key in EXCLUDE:
             continue
         if is_git and du.get("commit_id"):
-            body.append("%s @ %s@%s" % (name, du["url"], du["commit_id"]))
+            # PEP 610 stores the bare repository URL in `url` and the scheme
+            # separately in vcs_info.vcs. A pip-installable requirement needs
+            # them recombined as `<vcs>+<url>@<commit>`; emitting the bare url
+            # would make pip treat it as an archive download.
+            body.append("%s @ %s" % (name, pip_vcs_url(du)))
             git_count += 1
         else:
             body.append("%s==%s" % (name, version))
@@ -279,8 +295,9 @@ def main() -> int:
         {
             "step": 5,
             "layer": "smplx_no_deps",
-            "method": "pip install --no-build-isolation --no-deps 'smplx @ %s@%s'"
-                      % (smplx_du.get("url", "?"), smplx_du.get("commit_id", "?")),
+            "method": "pip install --no-build-isolation --no-deps 'smplx @ %s'"
+                      % (pip_vcs_url(smplx_du) if smplx_du else "?"),
+            "pip_requirement": pip_vcs_url(smplx_du) if smplx_du else None,
             "install_mode": "--no-deps",
             "note": SMPLX_REASON,
             "dependency_closure_supplied_by": {
@@ -307,8 +324,15 @@ def main() -> int:
         },
         "frozen_runtime": {
             "soap_sha": soap_sha,
-            "python": read(os.path.join(man, "candidate-python-version.txt")).strip()
-                      or "unavailable",
+            # `docker run` on this base emits the NVIDIA container banner on
+            # stdout ahead of the command output, so pick the version line out
+            # rather than storing the whole blob.
+            "python": next(
+                (ln.strip() for ln in
+                 read(os.path.join(man, "candidate-python-version.txt")).splitlines()
+                 if ln.strip().startswith("Python ")),
+                "unavailable",
+            ),
             "cuda_arch_list": metrics.get("INPUT_TORCH_CUDA_ARCH_LIST"),
             "force_cuda": "1",
         },

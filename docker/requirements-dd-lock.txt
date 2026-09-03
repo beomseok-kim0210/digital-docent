@@ -1,134 +1,170 @@
-# ============================================================================
-# DD SOAP — TIER 1 : deterministic lock
+# ==========================================================================
+# DD SOAP - CANONICAL FINAL LOCK  (layer 4 of the lock set)
 #
-# Reconstruction of the 2026-09-02 successful SOAP environment.
-# Lives OUTSIDE the SOAP source tree. SOAP's own requirements.txt is never
-# edited; Tier 2 is derived from it by filtering (see Dockerfile.v2).
+# Generated from the candidate image built by workflow run 33714685054.
+# Every version here is measured_from_candidate_image (2026-09-03).
 #
-# Install AFTER requirements-dd-torch.txt, BEFORE Tier 2:
-#   pip install --no-cache-dir --no-build-isolation -r requirements-dd-lock.txt
+# These are NOT the 2026-09-02 RunPod versions. The pod's Tier-2
+# versions were never recorded and are unrecoverable. This lock
+# establishes a new canonical deterministic environment going
+# forward; it does not assert equality with the pod environment.
 #
-# PROVENANCE KEY
-#   [M]  measured_from_execution_log  — read from the 2026-09-02 pod
-#   [H]  historically_derived         — reconstructed from upstream git history
-#                                       at the execution timestamp
-#   [R]  reported_by_source           — declared upstream (SOAP requirements.txt)
-# ============================================================================
+# THIS FILE IS NOT THE WHOLE LOCK. See lockset.json for the ordered
+# layers and requirements-dd-lock.provenance.json for per-package
+# provenance. Distributions absent here are installed by a dedicated
+# layer and are still exactly locked:
+#   pip/setuptools/wheel/ninja  layer 1  build tools
+#   torch/torchvision/torchaudio layer 2  cu121 index
+#   dlib                        layer 3  isolated build
+#   smplx                       layer 5  --no-deps
+#
+# SOAP source revision: c94f718efbdf0abdd8bbe9e34e67737744f1310f
+# ==========================================================================
 
-# ---------------------------------------------------------------------------
-# 1. git dependencies — exact revisions
-#    SOAP requirements.txt lines 46-51 carry NO revision. Unpinned git HEAD is
-#    what produced the broken nvdiffrast install. Every git dep is pinned here.
-# ---------------------------------------------------------------------------
-
-# nvdiffrast 0.3.3
-# [M] SHA read directly from the successful install command.
-# HEAD at run time (253ac4fcea7de5f396371124af597e6cc957bfae, 2025-12-05) installs
-# as "UNKNOWN 0.0.0": only _nvdiffrast_c*.so lands, the nvdiffrast/ package dir is
-# absent, `import nvdiffrast` fails. This revision (2024-09-30) is the last one
-# preceding the SOAP source snapshot and registers correctly.
-nvdiffrast @ git+https://github.com/NVlabs/nvdiffrast.git@729261dc64c4241ea36efda84fbf532cc8b425b8
-
-# pytorch3d 0.7.9
-# [H] main@2026-08-27T13:32:44Z — default-branch HEAD throughout the run.
-# [M] installed version 0.7.9 corroborates: __version__ at this SHA == "0.7.9".
-pytorch3d @ git+https://github.com/facebookresearch/pytorch3d.git@e73a7e7bfc580d1f9225ad9ff7d2c753c320aabd
-
-# chumpy 0.71
-# [H] master@2025-08-18T15:12:28Z — default-branch HEAD throughout the run.
-# [M] installed version 0.71 corroborates: chumpy/version.py at this SHA == '0.71'.
+GitPython==3.1.61
+ImageIO==2.37.4
+Jinja2==3.1.6
+Markdown==3.10.3
+MarkupSafe==3.0.3
+PyMatting==1.1.15
+PyYAML==6.0.3
+Pygments==2.21.0
+Werkzeug==3.1.8
+absl-py==2.5.0
+accelerate==1.14.0
+adabound==0.0.5
+annotated-types==0.8.0
+antlr4-python3-runtime==4.9.3
+attrs==26.1.0
+certifi==2026.7.22
+cffi==2.1.1
+charset-normalizer==3.5.1
+cholespy==2.2.0
 chumpy @ git+https://github.com/mattloper/chumpy.git@580566eafc9ac68b2614b64d6f7aaa84eebb70da
-
-# smplx is DELIBERATELY ABSENT from this file. It is installed in its own layer
-# with --no-deps. See Dockerfile.v2 layer 5b and section 2b below.
-
-# deep3dface 0.0.1 (SOAP fork)
-# [H] main@2025-04-08T12:55:36Z — default-branch HEAD throughout the run.
-# [M] version 0.0.1 corroborates but does NOT identify.
+click==8.5.0
+cloudpickle==3.1.2
+coloredlogs==15.0.1
+compress-pickle==2.1.0
+contourpy==1.3.2
+cycler==0.12.1
+dearpygui==2.3.1
 deep3dface @ git+https://github.com/TingtingLiao/deep3dface.git@f0b05f389441a1dcdb75e56b48efd28d8174b676
-
-# ---------------------------------------------------------------------------
-# 2. drift corrections — SOAP does not run without these
-#    Every one is a measured runtime failure from the 2026-09-02 run.
-# ---------------------------------------------------------------------------
-
-# [M] unpinned resolves to 0.3.5 (2026-07-20) -> NameError: name 'Union' is not
-#     defined in kiui/op.py. 0.2.17 (2025-07-20) is contemporaneous with the
-#     SOAP snapshot (2025-07-21).
-kiui==0.2.17
-
-# [M] unpinned resolves to 1.0.1 (2026-08-14), which removed the legacy
-#     `solutions` API -> ImportError: cannot import name 'solutions'.
-mediapipe==0.10.21
-
-# [M] mediapipe 0.10.21 requires protobuf>=4.25.3,<5; tensorboard 2.21 requires
-#     protobuf>=6.31.1 -> ImportError: cannot import name 'runtime_version'.
-#     4.25.8 + tensorboard 2.19.0 is the resolved pair.
-#     NOTE: protobuf is NOT in SOAP requirements.txt. It is transitive.
-protobuf==4.25.8
-tensorboard==2.19.0
-
-# ---------------------------------------------------------------------------
-# 2b. smplx's own dependencies, re-declared here.
-#
-#     WHY smplx IS NOT IN THIS FILE
-#     The SOAP smplx fork declares, in setup.py at the pinned SHA:
-#         'nvdiffrast @ git+https://github.com/NVlabs/nvdiffrast.git'
-#     — a PEP 508 URL requirement with NO revision. pip therefore resolves it to
-#     nvdiffrast HEAD (253ac4fc), the exact revision this lock exists to avoid,
-#     whose metadata reports project name 'unknown'. Resolved together with our
-#     pinned 0.3.3 this is ResolutionImpossible, measured in CI run 33710226766:
-#         "smplx 0.0.1 depends on nvdiffrast (unavailable)"
-#     pip constraints cannot override a direct URL requirement, so smplx is
-#     installed with --no-deps in its own layer and its real dependencies are
-#     listed here instead.
-#
-#     smplx install_requires at 05e521dd, read from source, complete, 8 entries:
-#         torch      -> Tier 0
-#         numpy      -> pinned below
-#         kiui       -> pinned below
-#         chumpy     -> pinned above (git SHA)
-#         nvdiffrast -> pinned above (git SHA) — this is the override
-#         matplotlib -> arrives in Tier 2
-#         tqdm       -> here
-#         rich       -> here
-#     Nothing else in the build guarantees rich, and on the pod it arrived as an
-#     smplx dependency. Both are unpinned for the candidate build and become
-#     exact in the final lock once measured.
-tqdm
-rich
-
-# ---------------------------------------------------------------------------
-# 3. contemporaneous alignment — installed as a preventive set
-#    No individual failure was observed for these three; they were pinned in the
-#    same corrective command as mediapipe and the run succeeded afterwards.
-#    Their individual necessity is UNPROVEN.
-# ---------------------------------------------------------------------------
+diffusers==0.27.2
+dominate==2.9.1
+executing==2.2.1
 face-alignment==1.4.1
-trimesh==4.7.1
+facenet-pytorch==2.5.3
+filelock==3.32.3
+flatbuffers==25.12.19
+fonttools==4.64.0
+fsspec==2026.7.0
+gitdb==4.0.12
+grpcio==1.83.1
+h5py==3.16.0
+hickle==5.0.3
+huggingface-hub==0.24.6
+humanfriendly==10.0
+idna==3.19
+imageio-ffmpeg==0.4.7
+imgaug==0.4.0
+importlib_metadata==9.0.1
+iopath==0.1.10
+jax==0.4.30
+jaxlib==0.4.30
+joblib==1.6.0
+jsonschema-specifications==2025.9.1
+jsonschema==4.26.0
+kiui==0.2.17
+kiwisolver==1.5.1
 kornia==0.8.1
-
-# ---------------------------------------------------------------------------
-# 4. compiled extensions — built from sdist against the Tier 0 torch
-# ---------------------------------------------------------------------------
-torch_sparse==0.6.18   # [M]
-torch_scatter==2.1.2   # [M]
-
-# dlib is deliberately NOT listed here.
-# It failed inside the aggregate build and succeeded standalone. ROOT CAUSE IS
-# UNKNOWN (resource exhaustion was hypothesised and disproven: 437 GB RAM free,
-# 96 cores). Isolation is a MITIGATION, not a proven fix. See Dockerfile.v2.
-
-# ---------------------------------------------------------------------------
-# 5. versions already pinned by SOAP upstream — restated so the lock is complete
-# ---------------------------------------------------------------------------
-numpy==1.23.1            # [M][R] requirements.txt:22
-transformers==4.44.2     # [M][R] requirements.txt:42
-diffusers==0.27.2        # [M][R] requirements.txt:43
-imageio-ffmpeg==0.4.7    # [R]    requirements.txt:44 — installed build NOT measured
-huggingface_hub==0.24.6  # [M][R] requirements.txt:45
-
-# ---------------------------------------------------------------------------
-# 6. build helper that requirements.txt leaves unpinned but we measured
-# ---------------------------------------------------------------------------
-ninja==1.13.2            # [M] requirements.txt:39 is bare `Ninja`
+kornia_rs==0.1.14
+lazy-loader==0.5
+lightning-utilities==0.15.3
+llvmlite==0.49.0
+markdown-it-py==4.2.0
+matplotlib==3.10.9
+mdurl==0.1.2
+mediapipe==0.10.21
+ml_dtypes==0.5.4
+mpmath==1.3.0
+munch==4.0.0
+networkx==3.4.2
+numba==0.67.0
+numpy==1.23.1
+nvdiffrast @ git+https://github.com/NVlabs/nvdiffrast.git@729261dc64c4241ea36efda84fbf532cc8b425b8
+nvidia-cublas-cu12==12.1.3.1
+nvidia-cuda-cupti-cu12==12.1.105
+nvidia-cuda-nvrtc-cu12==12.1.105
+nvidia-cuda-runtime-cu12==12.1.105
+nvidia-cudnn-cu12==8.9.2.26
+nvidia-cufft-cu12==11.0.2.54
+nvidia-curand-cu12==10.3.2.106
+nvidia-cusolver-cu12==11.4.5.107
+nvidia-cusparse-cu12==12.1.0.106
+nvidia-nccl-cu12==2.20.5
+nvidia-nvjitlink-cu12==12.9.86
+nvidia-nvtx-cu12==12.1.105
+objprint==0.3.0
+omegaconf==2.3.1
+onnxruntime-gpu==1.23.2
+opencv-contrib-python==4.11.0.86
+opencv-python-headless==4.11.0.86
+opencv-python==4.11.0.86
+opt_einsum==3.4.0
+packaging==26.3
+pandas==2.3.3
+pillow==12.3.0
+platformdirs==4.11.7
+pooch==1.9.0
+portalocker==4.3.0
+protobuf==4.25.8
+psutil==7.2.2
+pyarrow==25.0.1
+pycparser==3.0
+pydantic==2.13.5
+pydantic_core==2.46.5
+pymeshlab==2025.7.post1
+pyparsing==3.3.2
+python-dateutil==2.9.0.post0
+pytorch3d @ git+https://github.com/facebookresearch/pytorch3d.git@e73a7e7bfc580d1f9225ad9ff7d2c753c320aabd
+pytz==2026.3.post1
+referencing==0.37.0
+regex==2026.9.3
+rembg==2.0.69
+requests==2.34.2
+rich==15.0.0
+rpds-py==0.30.0
+safetensors==0.8.0
+scikit-image==0.24.0
+scikit-learn==1.7.2
+scipy==1.13.1
+sentencepiece==0.2.2
+sentry-sdk==2.68.1
+shapely==2.1.2
+six==1.17.0
+sk-video==1.1.10
+smmap==5.0.3
+sounddevice==0.5.6
+sympy==1.14.0
+tensorboard-data-server==0.7.2
+tensorboard==2.19.0
+termcolor==3.3.0
+threadpoolctl==3.6.0
+tifffile==2025.5.10
+tokenizers==0.19.1
+torch-scatter==2.1.2
+torch-sparse==0.6.18
+torchfile==0.1.0
+torchmetrics==1.9.0
+tqdm==4.70.0
+transformers==4.44.2
+trimesh==4.7.1
+triton==2.3.1
+typing-inspection==0.4.4
+typing_extensions==4.16.0
+tzdata==2026.3
+urllib3==2.7.0
+varname==1.0.0
+wandb==0.28.0
+xatlas==0.0.11
+zipp==4.1.0

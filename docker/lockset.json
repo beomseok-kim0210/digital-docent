@@ -1,0 +1,127 @@
+{
+  "coverage": {
+    "covered": 156,
+    "distributions_in_image": 156,
+    "uncovered": []
+  },
+  "frozen_runtime": {
+    "cuda_arch_list": "8.6",
+    "force_cuda": "1",
+    "python": "Python 3.10.12",
+    "soap_sha": "c94f718efbdf0abdd8bbe9e34e67737744f1310f"
+  },
+  "generated_from": {
+    "candidate_build_elapsed_ms": "2894645",
+    "candidate_image_id": "sha256:71981631baa3a718a018f77abe57441fc796dcbce6cabeea15983451814376e5",
+    "candidate_image_size": "18738754045",
+    "github_sha": "2ac3e0d32fdebf9c7766569d9bff4a05f616d1f5",
+    "workflow_run_id": "33714685054"
+  },
+  "git_packages": {
+    "chumpy": {
+      "commit_id": "580566eafc9ac68b2614b64d6f7aaa84eebb70da",
+      "installed_commit_provenance": "measured_from_candidate_image",
+      "requested_revision": "580566eafc9ac68b2614b64d6f7aaa84eebb70da",
+      "sha_selection_provenance": "historically_derived",
+      "url": "https://github.com/mattloper/chumpy.git",
+      "version": "0.71"
+    },
+    "deep3dface": {
+      "commit_id": "f0b05f389441a1dcdb75e56b48efd28d8174b676",
+      "installed_commit_provenance": "measured_from_candidate_image",
+      "requested_revision": "f0b05f389441a1dcdb75e56b48efd28d8174b676",
+      "sha_selection_provenance": "historically_derived",
+      "url": "https://github.com/TingtingLiao/deep3dface.git",
+      "version": "0.0.1"
+    },
+    "nvdiffrast": {
+      "commit_id": "729261dc64c4241ea36efda84fbf532cc8b425b8",
+      "installed_commit_provenance": "measured_from_candidate_image",
+      "requested_revision": "729261dc64c4241ea36efda84fbf532cc8b425b8",
+      "sha_selection_provenance": "measured_from_execution_log",
+      "url": "https://github.com/NVlabs/nvdiffrast.git",
+      "version": "0.3.3"
+    },
+    "pytorch3d": {
+      "commit_id": "e73a7e7bfc580d1f9225ad9ff7d2c753c320aabd",
+      "installed_commit_provenance": "measured_from_candidate_image",
+      "requested_revision": "e73a7e7bfc580d1f9225ad9ff7d2c753c320aabd",
+      "sha_selection_provenance": "historically_derived",
+      "url": "https://github.com/facebookresearch/pytorch3d.git",
+      "version": "0.7.9"
+    },
+    "smplx": {
+      "commit_id": "05e521dd26b92f3d6e0d6462e58fb15b7d1dbfbe",
+      "installed_commit_provenance": "measured_from_candidate_image",
+      "requested_revision": "05e521dd26b92f3d6e0d6462e58fb15b7d1dbfbe",
+      "sha_selection_provenance": "historically_derived",
+      "url": "https://github.com/TingtingLiao/smplx.git",
+      "version": "0.0.1"
+    }
+  },
+  "install_order": [
+    {
+      "layer": "build_tools",
+      "method": "pip install --upgrade pip==<v>; pip install setuptools==<v> wheel==<v> ninja==<v>",
+      "note": "The pod upgraded pip only; setuptools stayed at the ensurepip-bundled 59.6.0. Pinned explicitly AND asserted so a change to Ubuntu's bundled wheel fails the build loudly.",
+      "packages": {
+        "ninja": "1.13.2",
+        "pip": "26.2.1",
+        "setuptools": "59.6.0",
+        "wheel": "0.48.0"
+      },
+      "step": 1
+    },
+    {
+      "index": "https://download.pytorch.org/whl/cu121",
+      "layer": "torch_tier",
+      "method": "pip install -r requirements-dd-torch.txt",
+      "note": "Separate invocation: --no-build-isolation builds import torch at build time and pip guarantees no ordering within one pass.",
+      "packages": {
+        "torch": "2.3.1+cu121",
+        "torchaudio": "2.3.1+cu121",
+        "torchvision": "0.18.1+cu121"
+      },
+      "step": 2
+    },
+    {
+      "layer": "dlib",
+      "method": "pip install --no-build-isolation dlib==<v>",
+      "note": "Failed inside the aggregate requirements build on the pod (gmake Error 2) and succeeded standalone. Resource exhaustion was hypothesised and DISPROVEN by measurement. ROOT CAUSE UNKNOWN; isolation is a mitigation, not a proven fix.",
+      "packages": {
+        "dlib": "20.0.1"
+      },
+      "step": 3
+    },
+    {
+      "layer": "main_lock",
+      "method": "pip install --no-build-isolation -r requirements-dd-lock.txt",
+      "note": "4 git packages with exact SHAs plus every remaining PyPI distribution.",
+      "package_count": 147,
+      "requirements_file": "requirements-dd-lock.txt",
+      "step": 4
+    },
+    {
+      "dependency_closure_supplied_by": {
+        "chumpy": "layer 4 (git SHA)",
+        "kiui": "layer 4",
+        "matplotlib": "layer 4",
+        "numpy": "layer 4",
+        "nvdiffrast": "layer 4 (git SHA)",
+        "rich": "layer 4",
+        "torch": "layer 2",
+        "tqdm": "layer 4"
+      },
+      "install_mode": "--no-deps",
+      "layer": "smplx_no_deps",
+      "method": "pip install --no-build-isolation --no-deps 'smplx @ git+https://github.com/TingtingLiao/smplx.git@05e521dd26b92f3d6e0d6462e58fb15b7d1dbfbe'",
+      "note": "setup.py at the pinned SHA declares 'nvdiffrast @ git+https://github.com/NVlabs/nvdiffrast.git' with no revision. Resolving it pulls mutable HEAD, which conflicts with the verified nvdiffrast revision. pip constraints do not apply to direct URL requirements, so dependency installation is controlled externally instead. Upstream source is NOT patched and the smplx SHA is unchanged.",
+      "packages": {
+        "smplx": "0.0.1"
+      },
+      "pip_requirement": "git+https://github.com/TingtingLiao/smplx.git@05e521dd26b92f3d6e0d6462e58fb15b7d1dbfbe",
+      "step": 5
+    }
+  ],
+  "schema": "dd-soap-lockset/1"
+}

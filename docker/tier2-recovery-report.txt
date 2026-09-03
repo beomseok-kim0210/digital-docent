@@ -1,0 +1,38 @@
+TIER2_PREVIOUS_UNKNOWN = 29
+
+accelerate             1.14.0             MEASURED_FROM_CANDIDATE_IMAGE
+adabound               0.0.5              MEASURED_FROM_CANDIDATE_IMAGE
+cholespy               2.2.0              MEASURED_FROM_CANDIDATE_IMAGE
+click                  8.5.0              MEASURED_FROM_CANDIDATE_IMAGE
+coloredlogs            15.0.1             MEASURED_FROM_CANDIDATE_IMAGE
+compress_pickle        2.1.0              MEASURED_FROM_CANDIDATE_IMAGE
+dearpygui              2.3.1              MEASURED_FROM_CANDIDATE_IMAGE
+dominate               2.9.1              MEASURED_FROM_CANDIDATE_IMAGE
+facenet-pytorch        2.5.3              MEASURED_FROM_CANDIDATE_IMAGE
+hickle                 5.0.3              MEASURED_FROM_CANDIDATE_IMAGE
+imgaug                 0.4.0              MEASURED_FROM_CANDIDATE_IMAGE
+matplotlib             3.10.9             MEASURED_FROM_CANDIDATE_IMAGE
+munch                  4.0.0              MEASURED_FROM_CANDIDATE_IMAGE
+omegaconf              2.3.1              MEASURED_FROM_CANDIDATE_IMAGE
+onnxruntime_gpu        1.23.2             MEASURED_FROM_CANDIDATE_IMAGE
+pandas                 2.3.3              MEASURED_FROM_CANDIDATE_IMAGE
+pyarrow                25.0.1             MEASURED_FROM_CANDIDATE_IMAGE
+pymeshlab              2025.7.post1       MEASURED_FROM_CANDIDATE_IMAGE
+pyparsing              3.3.2              MEASURED_FROM_CANDIDATE_IMAGE
+pytz                   2026.3.post1       MEASURED_FROM_CANDIDATE_IMAGE
+pyyaml                 6.0.3              MEASURED_FROM_CANDIDATE_IMAGE
+rembg                  2.0.69             MEASURED_FROM_CANDIDATE_IMAGE
+scikit-learn           1.7.2              MEASURED_FROM_CANDIDATE_IMAGE
+sk-video               1.1.10             MEASURED_FROM_CANDIDATE_IMAGE
+termcolor              3.3.0              MEASURED_FROM_CANDIDATE_IMAGE
+torchfile              0.1.0              MEASURED_FROM_CANDIDATE_IMAGE
+torchmetrics           1.9.0              MEASURED_FROM_CANDIDATE_IMAGE
+wandb                  0.28.0             MEASURED_FROM_CANDIDATE_IMAGE
+xatlas                 0.0.11             MEASURED_FROM_CANDIDATE_IMAGE
+
+TIER2_RECOVERED     = 29
+TIER2_NOT_INSTALLED = 0
+TIER2_STILL_UNKNOWN = 0
+
+PROVENANCE = measured_from_candidate_image (2026-09-03).
+These are NOT the 2026-09-02 pod versions, which were never recorded.
