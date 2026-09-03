@@ -1,0 +1,127 @@
+# =============================================================================
+# DD SOAP — runtime evidence for an already-published image.
+#
+# Evidence only. Builds nothing, changes nothing, publishes nothing. It pulls a
+# published image by tag and interrogates what is actually inside it.
+#
+# Exists because package metadata cannot settle the question recovery 3 raised:
+# opencv-python, opencv-contrib-python and opencv-python-headless all install
+# into the same cv2/ directory and all remain listed at 4.11.0.86 regardless of
+# which binary won. Proving the deterministic last writer requires reading the
+# loaded object out of /proc/self/maps, hashing it, and running ldd on it.
+#
+# Also records the apt versions recovery 3 depends on. Those are measured, not
+# pinned: OS package reproducibility is a separate claim from Python lock
+# reproducibility, and the image digest is the deployment identity.
+#
+# GITHUB_TOKEN only. No PAT, no visibility change, no GPU.
+# =============================================================================
+name: dd-soap-image-evidence
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Published tag to interrogate"
+        required: false
+        default: "qka2-repro-v1"
+
+permissions:
+  contents: read
+  packages: read
+
+concurrency:
+  group: dd-soap-image-evidence
+  cancel-in-progress: false
+
+jobs:
+  evidence:
+    name: runtime evidence
+    runs-on: ubuntu-22.04
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Disk safety
+        run: |
+          set -eu
+          for t in /usr/local/lib/android /usr/share/dotnet /usr/local/.ghcup \
+                   /opt/hostedtoolcache/CodeQL /usr/share/swift /opt/az ; do
+            [ -e "$t" ] && sudo rm -rf "$t" || true
+          done
+          sudo systemctl stop docker.socket docker containerd || true
+          sudo rm -rf /var/lib/docker
+          sudo mkdir -p /mnt/docker /etc/docker
+          printf '{"data-root":"/mnt/docker"}\n' | sudo tee /etc/docker/daemon.json
+          sudo systemctl start docker
+          sleep 5
+          df -h / /mnt
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull published image
+        id: pull
+        run: |
+          set -eux
+          REPO_LC=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          REF="ghcr.io/${REPO_LC}:${{ inputs.image_tag }}"
+          docker pull "$REF"
+          echo "REF=$REF" | tee -a "$GITHUB_ENV"
+          mkdir -p evidence
+          docker image inspect "$REF" \
+            --format 'PULLED_IMAGE_ID={{.Id}}{{"\n"}}PULLED_IMAGE_SIZE={{.Size}}{{"\n"}}PULLED_IMAGE_ARCH={{.Architecture}}/{{.Os}}' \
+            | tee evidence/pulled-image.txt
+          docker image inspect "$REF" --format '{{index .RepoDigests 0}}' \
+            | tee -a evidence/pulled-image.txt
+          docker image inspect "$REF" > evidence/pulled-image-inspect.json
+
+      - name: OpenCV runtime evidence
+        run: |
+          set -eux
+          docker run --rm \
+            -v "$PWD/docker:/dd-scripts:ro" \
+            -v "$PWD/evidence:/out" \
+            "$REF" python /dd-scripts/cv2_evidence.py /out
+          sudo chown -R "$(id -u):$(id -g)" evidence
+
+      - name: Full apt inventory + lock re-verification
+        run: |
+          set -eux
+          docker run --rm "$REF" dpkg-query -W \
+            -f='${Package}\t${Version}\t${Architecture}\n' > evidence/final-apt-full.txt
+          wc -l evidence/final-apt-full.txt
+          docker run --rm "$REF" python /opt/dd-lock/validate_lock.py \
+            | tee evidence/evidence-validate-lock.txt
+          docker run --rm "$REF" python /opt/dd-lock/verify_lock_coverage.py \
+            /opt/dd-lock/lockset.json /opt/dd-lock/requirements-dd-lock.txt \
+            c94f718efbdf0abdd8bbe9e34e67737744f1310f \
+            | tee evidence/evidence-lock-coverage.txt
+          sudo chown -R "$(id -u):$(id -g)" evidence
+
+      - name: Base image digest (reference)
+        continue-on-error: true
+        run: |
+          set -eu
+          # The FROM tag has not been re-pushed since 2023-11-10, which precedes
+          # the 2026-09-02 pod run, so this digest is also what the pod ran.
+          # provenance: reported_by_source (registry) + derived (tag immutable).
+          docker pull -q nvidia/cuda:12.1.1-cudnn8-devel-ubuntu22.04 >/dev/null 2>&1 || true
+          docker image inspect nvidia/cuda:12.1.1-cudnn8-devel-ubuntu22.04 \
+            --format 'BASE_IMAGE_DIGEST={{index .RepoDigests 0}}' \
+            | tee evidence/base-image-digest.txt || echo "BASE_IMAGE_DIGEST=unavailable" | tee evidence/base-image-digest.txt
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dd-soap-runtime-evidence
+          path: evidence/
+          retention-days: 90
+          if-no-files-found: warn
