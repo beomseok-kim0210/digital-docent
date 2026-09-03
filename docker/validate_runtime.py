@@ -79,8 +79,9 @@ def stage_s1() -> list:
         "deep3dface",
         "dlib",
         "kiui.op",
-        "mediapipe.solutions",
         "kornia",
+        "mediapipe",
+        "mediapipe.framework.formats.landmark_pb2",
     ]
     import importlib
 
@@ -91,6 +92,23 @@ def stage_s1() -> list:
         except Exception as exc:  # noqa: BLE001
             print("  FAIL  %s  %s: %s" % (mod, type(exc).__name__, str(exc)[:140]))
             fails.append("S1 %s" % mod)
+
+    # mediapipe.solutions is an alias attribute, never a module path: the tree is
+    # mediapipe/python/solutions/ and the wheel re-exports it. SOAP consumes it
+    # the same way (src/utils/vis.py:4 `from mediapipe import solutions`), and
+    # dropping this alias is exactly what mediapipe 1.0.1 did, producing the
+    # measured pod failure. Probe by attribute, not by import_module.
+    for mod, attr in [("mediapipe", "solutions")]:
+        try:
+            obj = importlib.import_module(mod)
+            if hasattr(obj, attr):
+                print("  PASS  %s.%s (alias)" % (mod, attr))
+            else:
+                print("  FAIL  %s.%s alias missing" % (mod, attr))
+                fails.append("S1 %s.%s" % (mod, attr))
+        except Exception as exc:  # noqa: BLE001
+            print("  FAIL  %s.%s  %s" % (mod, attr, type(exc).__name__))
+            fails.append("S1 %s.%s" % (mod, attr))
     return fails
 
 

@@ -67,8 +67,25 @@ CPU_SAFE_IMPORTS = [
     "deep3dface",
     "dlib",
     "kiui.op",
-    "mediapipe.solutions",
     "kornia",
+    "mediapipe",
+    "mediapipe.framework.formats.landmark_pb2",
+]
+
+# (module, attribute) probes — for APIs exposed as an alias rather than a real
+# submodule, where import_module() would report a false failure.
+#
+# mediapipe.solutions has NEVER been a module path in any version: the package
+# tree is mediapipe/python/solutions/, and the wheel's __init__.py re-exports it
+# with `import mediapipe.python.solutions as solutions`. SOAP consumes it the
+# same way — src/utils/vis.py:4 `from mediapipe import solutions`.
+#
+# This attribute is exactly what the drift broke: mediapipe 1.0.1 dropped the
+# legacy alias, producing the measured pod failure
+#     ImportError: cannot import name 'solutions' from 'mediapipe'
+# so probing it by attribute is both correct and the regression guard.
+CPU_SAFE_SYMBOLS = [
+    ("mediapipe", "solutions"),
 ]
 
 DEFERRED_TO_RUNTIME = [
@@ -110,15 +127,23 @@ def main() -> int:
         except Exception as exc:  # noqa: BLE001 - report, do not mask
             failed.append((mod, type(exc).__name__, str(exc)[:160]))
 
+    for mod, attr in CPU_SAFE_SYMBOLS:
+        try:
+            obj = importlib.import_module(mod)
+            if not hasattr(obj, attr):
+                failed.append((mod + ":" + attr, "AttributeError", "alias missing"))
+        except Exception as exc:  # noqa: BLE001
+            failed.append((mod + ":" + attr, type(exc).__name__, str(exc)[:160]))
+
     if failed:
         print("CPU_IMPORT_FAILURE", file=sys.stderr)
         for mod, kind, msg in failed:
-            print("  %-22s %s: %s" % (mod, kind, msg), file=sys.stderr)
+            print("  %-42s %s: %s" % (mod, kind, msg), file=sys.stderr)
         return 1
 
     print(
-        "BUILD_VALIDATION_OK  packages=%d  cpu_imports=%d"
-        % (len(EXPECT), len(CPU_SAFE_IMPORTS))
+        "BUILD_VALIDATION_OK  packages=%d  cpu_imports=%d  symbol_probes=%d"
+        % (len(EXPECT), len(CPU_SAFE_IMPORTS), len(CPU_SAFE_SYMBOLS))
     )
     print("DEFERRED_TO_RUNTIME_S1: " + ", ".join(DEFERRED_TO_RUNTIME))
     return 0
