@@ -1,0 +1,243 @@
+# =============================================================================
+# DD SOAP — candidate image build (CI reproducibility path)
+#
+# Purpose, and ONLY this:
+#   1. build the candidate image from docker/Dockerfile.v2
+#   2. surface resolver / native-build failures on a free CPU builder
+#   3. capture the complete installed dependency manifest, unfiltered
+#   4. recover the 29 Tier-2 versions that no local execution log preserved
+#
+# This workflow does NOT run SOAP inference, does NOT need a GPU, and does NOT
+# publish anything. It is workflow_dispatch only: an ordinary push must never
+# trigger a multi-hour CUDA image build.
+# =============================================================================
+name: dd-soap-image
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_jobs:
+        description: "MAX_JOBS for native CUDA extension builds (start at 2)"
+        required: false
+        default: "2"
+      torch_cuda_arch_list:
+        description: "TORCH_CUDA_ARCH_LIST (8.6 = A40 target)"
+        required: false
+        default: "8.6"
+      no_cache:
+        description: "Build with --no-cache"
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dd-soap-image
+  cancel-in-progress: false
+
+jobs:
+  candidate:
+    name: candidate build + manifest
+    runs-on: ubuntu-22.04
+    timeout-minutes: 350
+
+    steps:
+      # -----------------------------------------------------------------------
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # -----------------------------------------------------------------------
+      - name: Runner metrics (before)
+        id: metrics_before
+        run: |
+          set -eux
+          echo "RUNNER_CPU=$(nproc)"                        | tee -a runner-metrics.txt
+          echo "RUNNER_MEMORY=$(free -b | awk '/^Mem:/{print $2}')" | tee -a runner-metrics.txt
+          echo "RUNNER_MEMORY_H=$(free -h | awk '/^Mem:/{print $2}')" | tee -a runner-metrics.txt
+          echo "RUNNER_DISK_TOTAL_ROOT=$(df -B1 --output=size / | tail -1)" | tee -a runner-metrics.txt
+          echo "RUNNER_DISK_FREE_ROOT=$(df -B1 --output=avail / | tail -1)" | tee -a runner-metrics.txt
+          echo "RUNNER_DISK_FREE_MNT=$(df -B1 --output=avail /mnt | tail -1)" | tee -a runner-metrics.txt
+          echo "--- df -h ---"   | tee -a runner-metrics.txt
+          df -h                  | tee -a runner-metrics.txt
+          echo "--- free -h ---" | tee -a runner-metrics.txt
+          free -h                | tee -a runner-metrics.txt
+          echo "--- docker ---"  | tee -a runner-metrics.txt
+          docker version         | tee -a runner-metrics.txt
+          docker buildx version  | tee -a runner-metrics.txt
+          {
+            echo "runner_cpu=$(nproc)"
+            echo "disk_free_root_start=$(df -B1 --output=avail / | tail -1)"
+            echo "disk_free_mnt_start=$(df -B1 --output=avail /mnt | tail -1)"
+          } >> "$GITHUB_OUTPUT"
+
+      # -----------------------------------------------------------------------
+      # Free space by removing large preinstalled toolchains that are
+      # irrelevant to a Linux Docker build. The checkout is never touched.
+      # Every target is measured before removal so bytes recovered are evidence,
+      # not an estimate.
+      # -----------------------------------------------------------------------
+      - name: Disk safety — reclaim irrelevant preinstalled toolchains
+        run: |
+          set -eu
+          before=$(df -B1 --output=avail / | tail -1)
+          : > disk-cleanup.txt
+          for t in \
+            /usr/local/lib/android \
+            /usr/share/dotnet \
+            /opt/ghc \
+            /usr/local/.ghcup \
+            /opt/hostedtoolcache/CodeQL \
+            /usr/local/share/powershell \
+            /usr/share/swift \
+            /opt/az ; do
+            if [ -e "$t" ]; then
+              sz=$(sudo du -sb "$t" 2>/dev/null | cut -f1 || echo 0)
+              sudo rm -rf "$t" || true
+              echo "REMOVED $t bytes=$sz" | tee -a disk-cleanup.txt
+            else
+              echo "ABSENT  $t" | tee -a disk-cleanup.txt
+            fi
+          done
+          after=$(df -B1 --output=avail / | tail -1)
+          echo "ROOT_AVAIL_BEFORE=$before" | tee -a disk-cleanup.txt
+          echo "ROOT_AVAIL_AFTER=$after"   | tee -a disk-cleanup.txt
+          echo "ROOT_RECOVERED=$((after-before))" | tee -a disk-cleanup.txt
+
+      # -----------------------------------------------------------------------
+      # /mnt is the runner's large ephemeral disk. Moving the Docker data-root
+      # there is what actually makes a ~20 GB CUDA image feasible; the root
+      # filesystem alone is not large enough. Preinstalled images are discarded
+      # with the old data-root — the runner is ephemeral and none are needed.
+      # -----------------------------------------------------------------------
+      - name: Disk safety — relocate Docker data-root to /mnt
+        run: |
+          set -eux
+          sudo systemctl stop docker.socket docker containerd || true
+          sudo rm -rf /var/lib/docker
+          sudo mkdir -p /mnt/docker
+          sudo mkdir -p /etc/docker
+          printf '{"data-root":"/mnt/docker"}\n' | sudo tee /etc/docker/daemon.json
+          sudo systemctl start docker
+          sleep 5
+          docker info --format 'DOCKER_ROOT_DIR={{.DockerRootDir}}' | tee -a disk-cleanup.txt
+          df -h / /mnt | tee -a disk-cleanup.txt
+          echo "MNT_AVAIL_AFTER_RELOCATE=$(df -B1 --output=avail /mnt | tail -1)" | tee -a disk-cleanup.txt
+
+      # -----------------------------------------------------------------------
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          driver: docker   # build straight into the daemon: no second copy of
+                           # a ~20 GB image in a builder container's cache
+
+      # -----------------------------------------------------------------------
+      - name: Start disk sampler
+        run: |
+          set -eu
+          nohup sh -c 'while true; do
+            printf "%s %s %s\n" "$(date -u +%FT%TZ)" \
+              "$(df -B1 --output=avail /mnt | tail -1)" \
+              "$(df -B1 --output=avail / | tail -1)"
+            sleep 30
+          done' > disk-samples.txt 2>/dev/null &
+          echo $! > sampler.pid
+
+      # -----------------------------------------------------------------------
+      - name: Candidate build
+        id: build
+        timeout-minutes: 300
+        run: |
+          set -o pipefail
+          NOCACHE=""
+          if [ "${{ inputs.no_cache }}" = "true" ]; then NOCACHE="--no-cache"; fi
+          echo "CANDIDATE_BUILD_STARTED_AT=$(date -u +%FT%TZ)" | tee -a build-timing.txt
+          start_ms=$(date +%s%3N)
+          set +e
+          DOCKER_BUILDKIT=1 docker buildx build \
+            --progress=plain \
+            $NOCACHE \
+            --build-arg MAX_JOBS='${{ inputs.max_jobs }}' \
+            --build-arg TORCH_CUDA_ARCH_LIST='${{ inputs.torch_cuda_arch_list }}' \
+            --build-arg FORCE_CUDA=1 \
+            -f docker/Dockerfile.v2 \
+            -t dd-soap:candidate \
+            docker/ 2>&1 | tee candidate-build.log
+          rc=$?
+          set -e
+          end_ms=$(date +%s%3N)
+          {
+            echo "CANDIDATE_BUILD_FINISHED_AT=$(date -u +%FT%TZ)"
+            echo "CANDIDATE_BUILD_ELAPSED_MS=$((end_ms-start_ms))"
+            echo "CANDIDATE_BUILD_EXIT_CODE=$rc"
+          } | tee -a build-timing.txt
+          {
+            echo "elapsed_ms=$((end_ms-start_ms))"
+            echo "exit_code=$rc"
+          } >> "$GITHUB_OUTPUT"
+          exit $rc
+
+      # -----------------------------------------------------------------------
+      - name: Stop disk sampler
+        if: always()
+        run: |
+          if [ -f sampler.pid ]; then kill "$(cat sampler.pid)" 2>/dev/null || true; fi
+          if [ -s disk-samples.txt ]; then
+            echo "DISK_FREE_MNT_MIN=$(awk '{print $2}' disk-samples.txt | sort -n | head -1)" | tee -a runner-metrics.txt
+            echo "DISK_FREE_ROOT_MIN=$(awk '{print $3}' disk-samples.txt | sort -n | head -1)" | tee -a runner-metrics.txt
+          fi
+          df -h / /mnt | tee -a runner-metrics.txt
+
+      # -----------------------------------------------------------------------
+      - name: Image identity
+        if: success()
+        run: |
+          set -eux
+          docker image inspect dd-soap:candidate \
+            --format 'CANDIDATE_IMAGE_ID={{.Id}}{{"\n"}}CANDIDATE_IMAGE_SIZE={{.Size}}' \
+            | tee -a build-timing.txt
+
+      # -----------------------------------------------------------------------
+      # The point of the whole run. Unfiltered, extracted from the built image.
+      # -----------------------------------------------------------------------
+      - name: Extract candidate manifest
+        if: success()
+        run: |
+          set -eux
+          mkdir -p manifest
+          docker run --rm -v "$PWD/manifest:/out" dd-soap:candidate \
+            python /opt/dd-lock/extract_manifest.py /out
+          docker run --rm dd-soap:candidate python -V           | tee manifest/candidate-python-version.txt
+          docker run --rm dd-soap:candidate python /opt/dd-lock/validate_lock.py \
+            | tee manifest/candidate-validate-lock.txt
+          sudo chown -R "$(id -u):$(id -g)" manifest
+          echo "--- tier2 resolution summary ---"
+          python3 -c "import json;d=json.load(open('manifest/candidate-tier2-resolution.json'));print('total',d['tier2_total']);print('measured',d['measured_from_candidate_image']);print('not_installed',d['not_installed'])"
+          echo "--- pip check ---"
+          cat manifest/candidate-pip-check.txt
+
+      # -----------------------------------------------------------------------
+      - name: Collect build metrics
+        if: always()
+        run: |
+          set -eu
+          mkdir -p manifest
+          cp -f runner-metrics.txt disk-cleanup.txt build-timing.txt manifest/ 2>/dev/null || true
+          cp -f disk-samples.txt candidate-build.log manifest/ 2>/dev/null || true
+          python3 docker/collect_metrics.py manifest \
+            "GITHUB_RUN_ID=${{ github.run_id }}" \
+            "GITHUB_SHA=${{ github.sha }}" \
+            "INPUT_MAX_JOBS=${{ inputs.max_jobs }}" \
+            "INPUT_TORCH_CUDA_ARCH_LIST=${{ inputs.torch_cuda_arch_list }}" \
+            "INPUT_NO_CACHE=${{ inputs.no_cache }}"
+
+      # -----------------------------------------------------------------------
+      - name: Upload manifest + logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dd-soap-candidate-manifest
+          path: manifest/
+          retention-days: 30
+          if-no-files-found: warn

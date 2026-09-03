@@ -1,0 +1,32 @@
+# ============================================================================
+# DD SOAP — TIER 1 CONSTRAINTS
+#
+# Applied with `-c` when installing Tier 2 (the residual, still-unpinned part
+# of SOAP's requirements.txt). Makes every locked version immovable: a Tier 2
+# package that transitively demands a different version fails the resolver at
+# DOCKER BUILD TIME (free, no GPU) instead of silently upgrading and failing at
+# RUNTIME on a paid pod.
+#
+# pip constraints do not apply to direct URL requirements. That is harmless
+# here: all five git dependencies are Tier 1 and are filtered out of Tier 2.
+# ============================================================================
+torch==2.3.1+cu121
+torchvision==0.18.1+cu121
+torchaudio==2.3.1+cu121
+numpy==1.23.1
+kiui==0.2.17
+mediapipe==0.10.21
+protobuf==4.25.8
+tensorboard==2.19.0
+face-alignment==1.4.1
+trimesh==4.7.1
+kornia==0.8.1
+torch_sparse==0.6.18
+torch_scatter==2.1.2
+transformers==4.44.2
+diffusers==0.27.2
+imageio-ffmpeg==0.4.7
+huggingface_hub==0.24.6
+ninja==1.13.2
+setuptools==59.6.0
+wheel==0.48.0

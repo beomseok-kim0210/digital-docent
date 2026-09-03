@@ -1,0 +1,16 @@
+# ============================================================================
+# DD SOAP — TIER 0 : core runtime (frozen by Human runbook, never mutated)
+# Install as its OWN pip invocation, BEFORE requirements-dd-lock.txt.
+# Reason: --no-build-isolation builds (pytorch3d, nvdiffrast, torch_sparse,
+#         torch_scatter) import torch at build time. pip does not guarantee
+#         install-before-build ordering inside a single resolution pass.
+#
+#   pip install --no-cache-dir -r requirements-dd-torch.txt
+#
+# provenance: measured_from_execution_log (pip list, 2026-09-02 pod)
+# ============================================================================
+--index-url https://download.pytorch.org/whl/cu121
+
+torch==2.3.1+cu121
+torchvision==0.18.1+cu121
+torchaudio==2.3.1+cu121

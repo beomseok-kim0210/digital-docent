@@ -1,0 +1,106 @@
+# ============================================================================
+# DD SOAP — TIER 1 : deterministic lock
+#
+# Reconstruction of the 2026-09-02 successful SOAP environment.
+# Lives OUTSIDE the SOAP source tree. SOAP's own requirements.txt is never
+# edited; Tier 2 is derived from it by filtering (see Dockerfile.v2).
+#
+# Install AFTER requirements-dd-torch.txt, BEFORE Tier 2:
+#   pip install --no-cache-dir --no-build-isolation -r requirements-dd-lock.txt
+#
+# PROVENANCE KEY
+#   [M]  measured_from_execution_log  — read from the 2026-09-02 pod
+#   [H]  historically_derived         — reconstructed from upstream git history
+#                                       at the execution timestamp
+#   [R]  reported_by_source           — declared upstream (SOAP requirements.txt)
+# ============================================================================
+
+# ---------------------------------------------------------------------------
+# 1. git dependencies — exact revisions
+#    SOAP requirements.txt lines 46-51 carry NO revision. Unpinned git HEAD is
+#    what produced the broken nvdiffrast install. Every git dep is pinned here.
+# ---------------------------------------------------------------------------
+
+# nvdiffrast 0.3.3
+# [M] SHA read directly from the successful install command.
+# HEAD at run time (253ac4fcea7de5f396371124af597e6cc957bfae, 2025-12-05) installs
+# as "UNKNOWN 0.0.0": only _nvdiffrast_c*.so lands, the nvdiffrast/ package dir is
+# absent, `import nvdiffrast` fails. This revision (2024-09-30) is the last one
+# preceding the SOAP source snapshot and registers correctly.
+nvdiffrast @ git+https://github.com/NVlabs/nvdiffrast.git@729261dc64c4241ea36efda84fbf532cc8b425b8
+
+# pytorch3d 0.7.9
+# [H] main@2026-08-27T13:32:44Z — default-branch HEAD throughout the run.
+# [M] installed version 0.7.9 corroborates: __version__ at this SHA == "0.7.9".
+pytorch3d @ git+https://github.com/facebookresearch/pytorch3d.git@e73a7e7bfc580d1f9225ad9ff7d2c753c320aabd
+
+# chumpy 0.71
+# [H] master@2025-08-18T15:12:28Z — default-branch HEAD throughout the run.
+# [M] installed version 0.71 corroborates: chumpy/version.py at this SHA == '0.71'.
+chumpy @ git+https://github.com/mattloper/chumpy.git@580566eafc9ac68b2614b64d6f7aaa84eebb70da
+
+# smplx 0.0.1 (SOAP fork)
+# [H] main@2025-06-24T00:52:08Z — default-branch HEAD throughout the run.
+# [M] version 0.0.1 corroborates but does NOT identify (fork is 0.0.1 at every commit).
+smplx @ git+https://github.com/TingtingLiao/smplx.git@05e521dd26b92f3d6e0d6462e58fb15b7d1dbfbe
+
+# deep3dface 0.0.1 (SOAP fork)
+# [H] main@2025-04-08T12:55:36Z — default-branch HEAD throughout the run.
+# [M] version 0.0.1 corroborates but does NOT identify.
+deep3dface @ git+https://github.com/TingtingLiao/deep3dface.git@f0b05f389441a1dcdb75e56b48efd28d8174b676
+
+# ---------------------------------------------------------------------------
+# 2. drift corrections — SOAP does not run without these
+#    Every one is a measured runtime failure from the 2026-09-02 run.
+# ---------------------------------------------------------------------------
+
+# [M] unpinned resolves to 0.3.5 (2026-07-20) -> NameError: name 'Union' is not
+#     defined in kiui/op.py. 0.2.17 (2025-07-20) is contemporaneous with the
+#     SOAP snapshot (2025-07-21).
+kiui==0.2.17
+
+# [M] unpinned resolves to 1.0.1 (2026-08-14), which removed the legacy
+#     `solutions` API -> ImportError: cannot import name 'solutions'.
+mediapipe==0.10.21
+
+# [M] mediapipe 0.10.21 requires protobuf>=4.25.3,<5; tensorboard 2.21 requires
+#     protobuf>=6.31.1 -> ImportError: cannot import name 'runtime_version'.
+#     4.25.8 + tensorboard 2.19.0 is the resolved pair.
+#     NOTE: protobuf is NOT in SOAP requirements.txt. It is transitive.
+protobuf==4.25.8
+tensorboard==2.19.0
+
+# ---------------------------------------------------------------------------
+# 3. contemporaneous alignment — installed as a preventive set
+#    No individual failure was observed for these three; they were pinned in the
+#    same corrective command as mediapipe and the run succeeded afterwards.
+#    Their individual necessity is UNPROVEN.
+# ---------------------------------------------------------------------------
+face-alignment==1.4.1
+trimesh==4.7.1
+kornia==0.8.1
+
+# ---------------------------------------------------------------------------
+# 4. compiled extensions — built from sdist against the Tier 0 torch
+# ---------------------------------------------------------------------------
+torch_sparse==0.6.18   # [M]
+torch_scatter==2.1.2   # [M]
+
+# dlib is deliberately NOT listed here.
+# It failed inside the aggregate build and succeeded standalone. ROOT CAUSE IS
+# UNKNOWN (resource exhaustion was hypothesised and disproven: 437 GB RAM free,
+# 96 cores). Isolation is a MITIGATION, not a proven fix. See Dockerfile.v2.
+
+# ---------------------------------------------------------------------------
+# 5. versions already pinned by SOAP upstream — restated so the lock is complete
+# ---------------------------------------------------------------------------
+numpy==1.23.1            # [M][R] requirements.txt:22
+transformers==4.44.2     # [M][R] requirements.txt:42
+diffusers==0.27.2        # [M][R] requirements.txt:43
+imageio-ffmpeg==0.4.7    # [R]    requirements.txt:44 — installed build NOT measured
+huggingface_hub==0.24.6  # [M][R] requirements.txt:45
+
+# ---------------------------------------------------------------------------
+# 6. build helper that requirements.txt leaves unpinned but we measured
+# ---------------------------------------------------------------------------
+ninja==1.13.2            # [M] requirements.txt:39 is bare `Ninja`
