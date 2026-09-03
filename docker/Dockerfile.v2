@@ -134,6 +134,30 @@ RUN MAX_JOBS=${MAX_JOBS} \
       -r /opt/dd-lock/requirements-dd-lock.txt
 
 # -----------------------------------------------------------------------------
+# 5b. smplx — installed alone, with --no-deps, AFTER nvdiffrast 0.3.3 exists.
+#
+#     The SOAP smplx fork declares in setup.py at the pinned SHA:
+#         'nvdiffrast @ git+https://github.com/NVlabs/nvdiffrast.git'
+#     an unpinned PEP 508 URL requirement. Resolving it drags in nvdiffrast HEAD
+#     (253ac4fc) — the broken revision whose metadata reports project name
+#     'unknown' — which cannot coexist with our pinned 0.3.3. Measured in CI run
+#     33710226766: ResolutionImpossible, "smplx 0.0.1 depends on nvdiffrast
+#     (unavailable)". pip constraints do not apply to direct URL requirements,
+#     so --no-deps is the only mechanism that overrides it.
+#
+#     Safe because smplx's install_requires was read in full from source at this
+#     exact SHA (8 entries) and every one is supplied elsewhere in this build:
+#     torch (Tier 0); numpy, kiui, tqdm, rich (Tier 1); chumpy, nvdiffrast
+#     (Tier 1 git SHAs); matplotlib (Tier 2).
+#
+#     smplx was the only git dependency doing this: pytorch3d declares
+#     ["iopath"], chumpy declares numpy/scipy/six, deep3dface declares
+#     torch/numpy/tqdm. All verified at their pinned SHAs.
+# -----------------------------------------------------------------------------
+RUN pip install --no-cache-dir --no-build-isolation --no-deps \
+      "smplx @ git+https://github.com/TingtingLiao/smplx.git@05e521dd26b92f3d6e0d6462e58fb15b7d1dbfbe"
+
+# -----------------------------------------------------------------------------
 # 6. SOAP source at the frozen revision. The source tree is never modified.
 # -----------------------------------------------------------------------------
 ARG SOAP_SHA=c94f718efbdf0abdd8bbe9e34e67737744f1310f

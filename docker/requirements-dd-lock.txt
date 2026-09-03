@@ -39,10 +39,8 @@ pytorch3d @ git+https://github.com/facebookresearch/pytorch3d.git@e73a7e7bfc580d
 # [M] installed version 0.71 corroborates: chumpy/version.py at this SHA == '0.71'.
 chumpy @ git+https://github.com/mattloper/chumpy.git@580566eafc9ac68b2614b64d6f7aaa84eebb70da
 
-# smplx 0.0.1 (SOAP fork)
-# [H] main@2025-06-24T00:52:08Z — default-branch HEAD throughout the run.
-# [M] version 0.0.1 corroborates but does NOT identify (fork is 0.0.1 at every commit).
-smplx @ git+https://github.com/TingtingLiao/smplx.git@05e521dd26b92f3d6e0d6462e58fb15b7d1dbfbe
+# smplx is DELIBERATELY ABSENT from this file. It is installed in its own layer
+# with --no-deps. See Dockerfile.v2 layer 5b and section 2b below.
 
 # deep3dface 0.0.1 (SOAP fork)
 # [H] main@2025-04-08T12:55:36Z — default-branch HEAD throughout the run.
@@ -69,6 +67,36 @@ mediapipe==0.10.21
 #     NOTE: protobuf is NOT in SOAP requirements.txt. It is transitive.
 protobuf==4.25.8
 tensorboard==2.19.0
+
+# ---------------------------------------------------------------------------
+# 2b. smplx's own dependencies, re-declared here.
+#
+#     WHY smplx IS NOT IN THIS FILE
+#     The SOAP smplx fork declares, in setup.py at the pinned SHA:
+#         'nvdiffrast @ git+https://github.com/NVlabs/nvdiffrast.git'
+#     — a PEP 508 URL requirement with NO revision. pip therefore resolves it to
+#     nvdiffrast HEAD (253ac4fc), the exact revision this lock exists to avoid,
+#     whose metadata reports project name 'unknown'. Resolved together with our
+#     pinned 0.3.3 this is ResolutionImpossible, measured in CI run 33710226766:
+#         "smplx 0.0.1 depends on nvdiffrast (unavailable)"
+#     pip constraints cannot override a direct URL requirement, so smplx is
+#     installed with --no-deps in its own layer and its real dependencies are
+#     listed here instead.
+#
+#     smplx install_requires at 05e521dd, read from source, complete, 8 entries:
+#         torch      -> Tier 0
+#         numpy      -> pinned below
+#         kiui       -> pinned below
+#         chumpy     -> pinned above (git SHA)
+#         nvdiffrast -> pinned above (git SHA) — this is the override
+#         matplotlib -> arrives in Tier 2
+#         tqdm       -> here
+#         rich       -> here
+#     Nothing else in the build guarantees rich, and on the pod it arrived as an
+#     smplx dependency. Both are unpinned for the candidate build and become
+#     exact in the final lock once measured.
+tqdm
+rich
 
 # ---------------------------------------------------------------------------
 # 3. contemporaneous alignment — installed as a preventive set
