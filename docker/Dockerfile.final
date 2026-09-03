@@ -42,7 +42,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       build-essential cmake ninja-build git wget curl unzip ca-certificates \
       mesa-common-dev libegl1-mesa-dev libgles2-mesa-dev mesa-utils \
       libx11-dev libopenblas-dev \
+      libglib2.0-0 libgl1 libsm6 libxext6 libxrender1 \
  && rm -rf /var/lib/apt/lists/*
+# DECLARED DEVIATION from Dockerfile.v2's apt set, added after the first final
+# build failed at validation with
+#     ImportError: libgthread-2.0.so.0: cannot open shared object file
+# on kiui.op and every mediapipe import.
+#
+# libglib2.0-0 provides libgthread-2.0.so.0. Neither image had it: the
+# candidate's apt inventory shows libgl1, libgomp1 and libxext6 arriving via
+# mesa, but no glib. What differed was which cv2 binary survived — see the
+# opencv layer below. libgl1/libsm6/libxext6/libxrender1 are pinned into the
+# explicit list rather than inherited transitively from mesa, so a mesa
+# packaging change cannot silently remove them.
+#
+# Pure OS addition. No Python pin, version, or git SHA is affected.
 
 # -----------------------------------------------------------------------------
 # LOCK SET LAYER 1 — build tools.
@@ -88,6 +102,30 @@ RUN MAX_JOBS=${MAX_JOBS} \
     FORCE_CUDA=${FORCE_CUDA} \
     pip install --no-cache-dir --no-build-isolation \
       -r /opt/dd-lock/requirements-dd-lock.txt
+
+# -----------------------------------------------------------------------------
+# LAYER 4b — deterministic cv2 provider.
+#
+# opencv-python, opencv-contrib-python and opencv-python-headless are three
+# distributions that all install into the SAME cv2/ package directory, so the
+# one pip writes LAST determines the actual binary. All three are legitimately
+# required by the dependency graph (mediapipe declares opencv-contrib-python;
+# rembg/scikit-image pull headless) and none can be dropped.
+#
+# That makes the surviving binary a function of pip's install ordering, which
+# differs between a multi-pass build and a single-pass build from the complete
+# lock. It is exactly what broke the first final build: the candidate ended
+# with headless, the final ended with a non-headless build needing libgthread.
+#
+# Pinning the last writer removes the ordering dependence. opencv-contrib-python
+# is chosen because it is a strict superset — all opencv-python modules plus the
+# contrib modules — so no cv2 function any package might call goes missing, and
+# it is what mediapipe actually declares. With libglib2.0-0 present it imports
+# cleanly. Versions are unchanged; all three distributions remain installed at
+# 4.11.0.86, so the lock metadata and coverage checks are unaffected.
+# -----------------------------------------------------------------------------
+RUN pip install --no-cache-dir --no-build-isolation --no-deps --force-reinstall \
+      "opencv-contrib-python==4.11.0.86"
 
 # -----------------------------------------------------------------------------
 # LOCK SET LAYER 5 — smplx, --no-deps, after nvdiffrast exists.
