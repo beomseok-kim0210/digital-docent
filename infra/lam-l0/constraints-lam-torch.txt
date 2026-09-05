@@ -1,0 +1,21 @@
+# LAM-A2E torch tier constraints (step 1).
+#
+# pip install torch==2.1.2 torchaudio==2.1.2 \
+#     --index-url https://download.pytorch.org/whl/cu121 \
+#     -c constraints-lam-torch.txt
+#
+# torch and torchaudio carry the +cu121 local version the index supplies.
+# The rest are torch's own transitive dependencies, resolved from that same
+# index. Without these pins step 1 floats and the closure is not reproducible.
+# filelock is deliberately absent: step 2 installs 3.32.5 over whatever step 1
+# picks, so pinning it here would only create a conflict.
+# filelock==3.32.3   <- superseded by requirements-lam-core.lock (3.32.5)
+fsspec==2026.7.0
+Jinja2==3.1.6
+MarkupSafe==3.0.3
+mpmath==1.3.0
+networkx==3.4.2
+sympy==1.14.0
+torch==2.1.2+cu121
+torchaudio==2.1.2+cu121
+typing_extensions==4.16.0

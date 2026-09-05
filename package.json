@@ -6,11 +6,26 @@
   "description": "Photo-personalized 3D docent — GNM head, emotion morphs, lip-sync, retrieval-backed chat.",
   "scripts": {
     "build": "tsc --noEmit",
-    "test": "node --test"
+    "test": "node --test",
+    "dev": "next dev"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "0.111.0",
+    "@react-three/drei": "10.7.7",
+    "@react-three/fiber": "9.6.1",
+    "framer-motion": "12.40.0",
+    "lucide-react": "0.468.0",
+    "next": "15.5.18",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "three": "0.185.1"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
-    "typescript": "^5.9.0"
+    "@types/node": "22.19.19",
+    "@types/react": "19.2.15",
+    "@types/react-dom": "19.2.3",
+    "@types/three": "0.185.1",
+    "typescript": "5.9.3"
   },
   "engines": {
     "node": ">=24"

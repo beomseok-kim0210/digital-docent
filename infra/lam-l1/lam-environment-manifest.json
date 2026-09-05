@@ -1,0 +1,326 @@
+{
+  "generated": "2026-09-04T06:23:02+00:00",
+  "environment": {
+    "os": "Windows 10 (10.0.19045)",
+    "machine": "AMD64",
+    "python_version": "3.10.21",
+    "python_implementation": "CPython",
+    "python_executable": "D:\\dd-lam-a2e-v1\\venv\\Scripts\\python.exe",
+    "prefix": "D:\\dd-lam-a2e-v1\\venv",
+    "base_prefix": "D:\\dd-lam-a2e-v1\\python",
+    "isolated_from_system_site_packages": true
+  },
+  "build_tools": {
+    "pip": "26.2.1",
+    "setuptools": "65.5.0",
+    "wheel": "(absent)"
+  },
+  "counts": {
+    "TOTAL_DISTRIBUTION_COUNT": 51,
+    "BUILD_TOOL_COUNT": 2,
+    "APPLICATION_DISTRIBUTION_COUNT": 49
+  },
+  "PIP_CHECK": "PASS",
+  "pip_check_output": "No broken requirements found.",
+  "lock_coverage": {
+    "LOCKED_DISTRIBUTIONS": 49,
+    "LOCK_VERSION_MISMATCH": 0,
+    "local_tag_differences": [],
+    "version_mismatches": [],
+    "MISSING_LOCK_DISTRIBUTIONS": 0,
+    "missing": [],
+    "UNEXPECTED_DISTRIBUTIONS": 0,
+    "unexpected": [],
+    "UNPINNED_CORE_DISTRIBUTIONS": 0
+  },
+  "import_gate": {
+    "CORE_IMPORT_TOTAL": 41,
+    "CORE_IMPORT_PASS": 41,
+    "CORE_IMPORT_FAIL": 0,
+    "cuda_unavailable_not_counted_as_failure": [],
+    "detail": {
+      "numpy": {
+        "ok": true,
+        "version": "1.26.3"
+      },
+      "scipy": {
+        "ok": true,
+        "version": "1.15.3"
+      },
+      "torch": {
+        "ok": true,
+        "version": "2.1.2+cu121"
+      },
+      "torchaudio": {
+        "ok": true,
+        "version": "2.1.2+cu121"
+      },
+      "transformers": {
+        "ok": true,
+        "version": "4.36.2"
+      },
+      "librosa": {
+        "ok": true,
+        "version": "0.11.0"
+      },
+      "addict": {
+        "ok": true,
+        "version": "2.4.0"
+      },
+      "yapf": {
+        "ok": true,
+        "version": "0.40.1"
+      },
+      "termcolor": {
+        "ok": true,
+        "version": null
+      },
+      "regex": {
+        "ok": true,
+        "version": "2026.9.3"
+      },
+      "tqdm": {
+        "ok": true,
+        "version": "4.70.0"
+      },
+      "transformers.Wav2Vec2Model": {
+        "ok": true
+      },
+      "transformers.Wav2Vec2PreTrainedModel": {
+        "ok": true
+      },
+      "transformers.WavLMModel": {
+        "ok": true
+      },
+      "transformers.models.wav2vec2.configuration_wav2vec2.Wav2Vec2Config": {
+        "ok": true
+      },
+      "transformers.modeling_outputs.Wav2Vec2BaseModelOutput": {
+        "ok": true
+      },
+      "scipy.signal.savgol_filter": {
+        "ok": true
+      },
+      "scipy.ndimage.label": {
+        "ok": true
+      },
+      "librosa.feature.rms": {
+        "ok": true
+      },
+      "librosa.resample": {
+        "ok": true
+      },
+      "librosa.load": {
+        "ok": true
+      },
+      "addict.Dict": {
+        "ok": true
+      },
+      "yapf.yapflib.yapf_api.FormatCode": {
+        "ok": true
+      },
+      "termcolor.colored": {
+        "ok": true
+      },
+      "utils.config": {
+        "ok": true
+      },
+      "utils.registry": {
+        "ok": true
+      },
+      "utils.logger": {
+        "ok": true
+      },
+      "utils.env": {
+        "ok": true
+      },
+      "utils.misc": {
+        "ok": true
+      },
+      "utils.path": {
+        "ok": true
+      },
+      "utils.comm": {
+        "ok": true
+      },
+      "models.utils": {
+        "ok": true
+      },
+      "models.network": {
+        "ok": true
+      },
+      "models.encoder.wav2vec": {
+        "ok": true
+      },
+      "models.encoder.wavlm": {
+        "ok": true
+      },
+      "models.builder": {
+        "ok": true
+      },
+      "models.default": {
+        "ok": true
+      },
+      "models.losses": {
+        "ok": true
+      },
+      "engines.defaults": {
+        "ok": true
+      },
+      "engines.infer": {
+        "ok": true
+      },
+      "engines.launch": {
+        "ok": true
+      }
+    },
+    "CORE_IMPORT_GATE": "PASS"
+  },
+  "torch_tier": {
+    "torch": "2.1.2+cu121",
+    "torchaudio": "2.1.2+cu121",
+    "torchvision": null,
+    "torchvision_note": "excluded from CORE by L0 evidence: imported by no file in the inference closure. Upstream install_cu121.sh installs 0.16.2.",
+    "torch_version_cuda": "12.1",
+    "LOCAL_GPU_AVAILABLE": true,
+    "gpu_note": "CUDA execution is not required for L1; a false value here is not a failure",
+    "local_gpu": {
+      "LOCAL_GPU_AVAILABLE": true,
+      "name": "NVIDIA GeForce GTX 1060 3GB",
+      "compute_capability": "6.1",
+      "total_memory_GiB": 3.0,
+      "driver_version": "582.66",
+      "note": "capability query only. No kernel was launched, no inference was run. Recorded because it changes what L2 could cost, which is the Human's call."
+    }
+  },
+  "config_gate": {
+    "CONFIG_LOAD_GATE": "PASS",
+    "compared_keys": 18,
+    "differences": {},
+    "actual": {
+      "audio_sr": 16000,
+      "fps": 30.0,
+      "id_idx": 0,
+      "movement_smooth": false,
+      "brow_movement": false,
+      "expression_dim": 52,
+      "num_identity_classes": 12,
+      "identity_feat_dim": 64,
+      "hidden_dim": 512,
+      "norm_type": "ln",
+      "use_transformer": false,
+      "num_attention_heads": 8,
+      "num_transformer_layers": 6,
+      "pretrained_encoder_type": "wav2vec",
+      "pretrained_encoder_path": "facebook/wav2vec2-base-960h",
+      "wav2vec2_config_path": "configs/wav2vec2_config.json",
+      "weight": "pretrained_models/lam_audio2exp_streaming.tar",
+      "infer.type": "Audio2ExpressionInfer"
+    },
+    "seed_in_config": null,
+    "DETERMINISTIC": false,
+    "seed_note": "seed is None upstream; engines/defaults.py substitutes a wall-clock/pid/urandom seed, so the artifact is not reproducible run to run. jawOpen is unaffected.",
+    "encoder_path_exists_on_disk": false,
+    "mmcv_installed": false
+  },
+  "output_contract": {
+    "OUTPUT_CHANNEL_COUNT": 52,
+    "OUTPUT_FPS": 30.0,
+    "INPUT_SAMPLE_RATE": 16000,
+    "JAWOPEN_CHANNEL_NAME": "jawOpen",
+    "JAWOPEN_INDEX": 24,
+    "JAWOPEN_CHANNEL_IDENTIFIED": "PASS",
+    "mouth_channel_count": 29,
+    "ordered_channels": [
+      "browDownLeft",
+      "browDownRight",
+      "browInnerUp",
+      "browOuterUpLeft",
+      "browOuterUpRight",
+      "cheekPuff",
+      "cheekSquintLeft",
+      "cheekSquintRight",
+      "eyeBlinkLeft",
+      "eyeBlinkRight",
+      "eyeLookDownLeft",
+      "eyeLookDownRight",
+      "eyeLookInLeft",
+      "eyeLookInRight",
+      "eyeLookOutLeft",
+      "eyeLookOutRight",
+      "eyeLookUpLeft",
+      "eyeLookUpRight",
+      "eyeSquintLeft",
+      "eyeSquintRight",
+      "eyeWideLeft",
+      "eyeWideRight",
+      "jawForward",
+      "jawLeft",
+      "jawOpen",
+      "jawRight",
+      "mouthClose",
+      "mouthDimpleLeft",
+      "mouthDimpleRight",
+      "mouthFrownLeft",
+      "mouthFrownRight",
+      "mouthFunnel",
+      "mouthLeft",
+      "mouthLowerDownLeft",
+      "mouthLowerDownRight",
+      "mouthPressLeft",
+      "mouthPressRight",
+      "mouthPucker",
+      "mouthRight",
+      "mouthRollLower",
+      "mouthRollUpper",
+      "mouthShrugLower",
+      "mouthShrugUpper",
+      "mouthSmileLeft",
+      "mouthSmileRight",
+      "mouthStretchLeft",
+      "mouthStretchRight",
+      "mouthUpperUpLeft",
+      "mouthUpperUpRight",
+      "noseSneerLeft",
+      "noseSneerRight",
+      "tongueOut"
+    ],
+    "matches_l0_lock": true
+  },
+  "model_structure": {
+    "MODEL_STRUCTURE_LOAD": "PASS",
+    "note": "architecture only, built on CPU from the in-repo wav2vec2 config. No checkpoint was downloaded and no weights were loaded.",
+    "class": "DefaultEstimator",
+    "backbone": "Audio2Expression",
+    "encoder": "Wav2Vec2Model",
+    "parameter_count": 102113044,
+    "device": "cpu",
+    "weights_loaded": false
+  },
+  "elapsed_seconds": 33.21,
+  "source": {
+    "LAM_SOURCE_PATH": "D:\\dd-lam-a2e-v1\\src\\LAM_Audio2Expression",
+    "LAM_HEAD": "02a703c3ea7d8e360eb43098eca85ee98a083529",
+    "SOURCE_SHA_MATCH": "PASS",
+    "tree_sha": "a196252329c73289af86f3ac9eb7d2261faeefba",
+    "SOURCE_DIR_FILE_COUNT": 52,
+    "SOURCE_DIR_BYTES": 5161225,
+    "working_tree_dirty_files": 0
+  },
+  "l1_root": {
+    "L1_ROOT": "D:\\dd-lam-a2e-v1",
+    "VENV_PATH": "D:\\dd-lam-a2e-v1\\venv",
+    "PYTHON_EXECUTABLE": "D:\\dd-lam-a2e-v1\\venv\\Scripts\\python.exe",
+    "PYTHON_VERSION": "3.10.21",
+    "base_interpreter": "D:\\dd-lam-a2e-v1\\python\\python.exe",
+    "base_interpreter_provenance": "astral-sh/python-build-standalone 20260901, cpython-3.10.21+20260901-x86_64-pc-windows-msvc-install_only.tar.gz, sha256 b3edb1dacad300c7117ce4d6df97cd2e411afc0d173db43c224f904deb6253b5",
+    "system_python_altered": false,
+    "outside_git_tracked_paths": true
+  },
+  "reproducibility_claims": {
+    "PYTHON_REPRODUCIBILITY": "EXACT_LOCK",
+    "OS_PACKAGE_REPRODUCIBILITY": "MEASURED_NOT_FULLY_PINNED",
+    "note": "49 of 49 Python distributions installed at the locked version, including the +cu121 local tags. No OS package or base image layer is pinned, so no bit-for-bit image reproducibility is claimed. L1 is an environment reconstruction gate, not deployment-image certification.",
+    "platform_caveat": "the lock was resolved for cp310/manylinux and installed on cp310/win_amd64 with zero version drift, which is evidence the pin set is portable at the version level. It is not evidence that the Linux image builds; that is a separate run."
+  }
+}

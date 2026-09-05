@@ -1,0 +1,30 @@
+# LAM-A2E raw-inference CORE inputs (top-level only).
+#
+# Derived from an AST import closure over the two inference entrypoints, not
+# from upstream requirements.txt. Upstream pins are kept where they exist;
+# regex/scipy/tqdm carry no upstream pin and are resolved below.
+#
+# Excluded from CORE, with the evidence:
+#   opencv_python_headless  pinned upstream, but `cv2` is imported nowhere in the repo
+#   gradio, omegaconf       imported only by app_lam_audio2exp.py
+#   patool (patoolib)       imported only by app_lam_audio2exp.py
+#   spaces                  imported only by app_lam_audio2exp.py
+#   gradio_gaussian_render  bundled wheel, imported only by app_lam_audio2exp.py
+#   mmcv                    utils/config.py:545, reachable only when the config
+#                           filename does not end in .py; both entrypoints use .py
+#   torchvision             installed by scripts/install/install_cu121.sh but
+#                           imported by no file in the closure
+#
+# Step 1 installs the torch tier from the PyTorch cu121 index, separately:
+#   pip install torch==2.1.2 torchaudio==2.1.2 \
+#     --index-url https://download.pytorch.org/whl/cu121
+
+addict==2.4.0            # utils/config.py           upstream pin
+yapf==0.40.1             # utils/config.py           upstream pin
+librosa==0.11.0          # engines/infer.py          upstream pin
+transformers==4.36.2     # models/network.py         upstream pin
+termcolor==3.0.1         # utils/logger.py           upstream pin
+numpy==1.26.3            # everywhere                upstream pin
+regex                    # utils/config.py:25        no upstream pin, resolved
+scipy                    # models/utils.py:6,685     no upstream pin, resolved
+tqdm                     # inference_streaming_audio.py:27  no upstream pin, resolved

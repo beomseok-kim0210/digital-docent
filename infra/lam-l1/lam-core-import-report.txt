@@ -1,0 +1,46 @@
+CORE_IMPORT_TOTAL 41
+CORE_IMPORT_PASS  41
+CORE_IMPORT_FAIL  0
+CORE_IMPORT_GATE  PASS
+
+OK    numpy  1.26.3
+OK    scipy  1.15.3
+OK    torch  2.1.2+cu121
+OK    torchaudio  2.1.2+cu121
+OK    transformers  4.36.2
+OK    librosa  0.11.0
+OK    addict  2.4.0
+OK    yapf  0.40.1
+OK    termcolor
+OK    regex  2026.9.3
+OK    tqdm  4.70.0
+OK    transformers.Wav2Vec2Model
+OK    transformers.Wav2Vec2PreTrainedModel
+OK    transformers.WavLMModel
+OK    transformers.models.wav2vec2.configuration_wav2vec2.Wav2Vec2Config
+OK    transformers.modeling_outputs.Wav2Vec2BaseModelOutput
+OK    scipy.signal.savgol_filter
+OK    scipy.ndimage.label
+OK    librosa.feature.rms
+OK    librosa.resample
+OK    librosa.load
+OK    addict.Dict
+OK    yapf.yapflib.yapf_api.FormatCode
+OK    termcolor.colored
+OK    utils.config
+OK    utils.registry
+OK    utils.logger
+OK    utils.env
+OK    utils.misc
+OK    utils.path
+OK    utils.comm
+OK    models.utils
+OK    models.network
+OK    models.encoder.wav2vec
+OK    models.encoder.wavlm
+OK    models.builder
+OK    models.default
+OK    models.losses
+OK    engines.defaults
+OK    engines.infer
+OK    engines.launch

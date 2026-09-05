@@ -1,0 +1,76 @@
+{
+  "generated": "2026-09-04",
+  "verified_by": "public HuggingFace and GitHub APIs, unauthenticated, no token used",
+  "code": {
+    "repository": "https://github.com/aigc3d/LAM_Audio2Expression",
+    "sha": "02a703c3ea7d8e360eb43098eca85ee98a083529",
+    "committed": "2025-10-24T05:53:58Z",
+    "license": "Apache-2.0",
+    "is_current_default_branch_head": true,
+    "default_branch": "main",
+    "provenance": "measured"
+  },
+  "model": {
+    "repository": "https://huggingface.co/3DAIGC/LAM_audio2exp",
+    "revision": "0fe5f4dbb283ec7d9c01688681e6e4b6ac314858",
+    "gated": false,
+    "private": false,
+    "license": "apache-2.0",
+    "files": [
+      {
+        "name": "LAM_audio2exp_assets.tar",
+        "bytes": 32798496,
+        "lfs_sha256": "f5759f080ec1352d454d88d5a32f09c0fc8aeaf50b9ac1fd9c34a4acd82acfa1",
+        "required_for_raw_inference": "unknown_at_L0"
+      },
+      {
+        "name": "LAM_audio2exp_streaming.tar",
+        "bytes": 373377643,
+        "lfs_sha256": "0877f419b1b7b6856479b743b71625ad478f97434404e91288f9f0d6d516b97a",
+        "required_for_raw_inference": true,
+        "why": "configs/lam_audio2exp_config_streaming.py sets weight = 'pretrained_models/lam_audio2exp_streaming.tar'"
+      },
+      { "name": "README.md", "bytes": 31, "lfs_sha256": null },
+      { "name": ".gitattributes", "bytes": 1519, "lfs_sha256": null }
+    ],
+    "MODEL_FILE_COUNT": 2,
+    "MODEL_TOTAL_BYTES": 406176139,
+    "note": "counts cover the two .tar weight artifacts; the repository also holds README.md and .gitattributes (1550 B combined). Sizes and hashes read from the HF blobs API at the pinned revision; neither tar was downloaded.",
+    "provenance": "reported_by_source (HF API), not locally hashed"
+  },
+  "audio_encoder": {
+    "repository": "https://huggingface.co/facebook/wav2vec2-base-960h",
+    "revision": "22aad52d435eb6dbaf354bdad9b0da84ce7d6156",
+    "is_current_main_head": true,
+    "repo_last_modified": "2022-11-14T21:37:23.000Z",
+    "gated": false,
+    "license": "apache-2.0",
+    "DOWNLOADED_AT_INFERENCE": false,
+    "why_not": "models/network.py:40 guards the download with os.path.exists(pretrained_encoder_path). The configured value is the repo id 'facebook/wav2vec2-base-960h', which is not a filesystem path, so the guard is false and line 43 runs instead: Wav2Vec2Config.from_pretrained('configs/wav2vec2_config.json') followed by Wav2Vec2Model(config) — a randomly initialised encoder whose weights are then expected to come from the LAM checkpoint.",
+    "consequence": "derived, not measured: the fine-tuned encoder weights must be inside LAM_audio2exp_streaming.tar. Confirming that requires opening the 373 MB tar and was deliberately not done at L0.",
+    "hazard": "if a directory literally named 'facebook/wav2vec2-base-960h' ever exists in the working directory, the guard flips and the model is loaded from disk instead. Behaviour is path-dependent.",
+    "files_that_would_be_required_if_the_guard_flipped": [
+      { "name": "config.json", "bytes": 1596 },
+      {
+        "name": "model.safetensors",
+        "bytes": 377607901,
+        "lfs_sha256": "8aa76ab2243c81747a1f832954586bc566090c83a0ac167df6f31f0fa917d74a",
+        "note": "transformers 4.36.2 prefers safetensors when the safetensors package is installed, which it is (0.8.0)"
+      }
+    ],
+    "files_not_required": [
+      "pytorch_model.bin (377667514 B) — superseded by model.safetensors",
+      "tf_model.h5 (377840624 B) — TensorFlow format, never loaded",
+      "vocab.json, tokenizer_config.json, special_tokens_map.json — no tokenizer is constructed",
+      "preprocessor_config.json, feature_extractor_config.json — no Wav2Vec2Processor or FeatureExtractor is constructed; librosa does the resampling"
+    ],
+    "ENCODER_FILE_COUNT": 0,
+    "ENCODER_TOTAL_BYTES": 0,
+    "ENCODER_FILE_COUNT_IF_GUARD_FLIPPED": 2,
+    "ENCODER_TOTAL_BYTES_IF_GUARD_FLIPPED": 377609497,
+    "local_config_actually_read": {
+      "path": "configs/wav2vec2_config.json",
+      "in_repo_at_frozen_sha": true
+    }
+  }
+}

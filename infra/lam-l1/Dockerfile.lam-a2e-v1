@@ -1,0 +1,94 @@
+# DD-LIPSYNC-LAM-A2E-V1 — build recipe, NOT BUILT.
+#
+# Written because every version it needs was already resolved at L0. It has
+# never been run: local Docker is unavailable and no cloud build is authorised.
+# Treat it as a reviewed draft, not as a validated image.
+#
+# This environment is deliberately separate from the SOAP image
+# (dd-soap:qka2-repro-v1, torch 2.3.1+cu121). The two torch tiers must never
+# share a container.
+#
+#   docker build -f Dockerfile.lam-a2e-v1 -t dd-lipsync-lam-a2e:v1 .
+#
+# Build context must contain:
+#   constraints-lam-torch.txt
+#   requirements-lam-core.lock
+
+# CUDA 12.1 runtime to match the torch cu121 tier. `runtime` rather than
+# `devel`: L0 measured zero sdists in the closure, so nothing compiles.
+FROM nvidia/cuda:12.1.1-cudnn8-runtime-ubuntu22.04
+
+ARG LAM_SHA=02a703c3ea7d8e360eb43098eca85ee98a083529
+ARG DEBIAN_FRONTEND=noninteractive
+
+# python3.10 is Ubuntu 22.04's system python and is the version upstream pins.
+# ffmpeg is NOT installed: L0 measured that soundfile bundles libsndfile and
+# that a 16 kHz WAV never reaches the audioread backends. Add it only if the
+# input format changes.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      python3.10 python3.10-venv python3.10-dev python3-pip git ca-certificates \
+ && rm -rf /var/lib/apt/lists/* \
+ && python3.10 --version | tee /opt/python-version.txt
+
+RUN python3.10 -m venv /opt/lamenv
+ENV VIRTUAL_ENV=/opt/lamenv
+ENV PATH=/opt/lamenv/bin:$PATH
+
+# Build tools frozen to the versions L0 resolved. Never upgraded afterwards.
+# wheel is intentionally absent — nothing in the closure builds from source.
+RUN pip install --no-cache-dir "pip==26.2.1" \
+ && pip install --no-cache-dir "setuptools==65.5.0" \
+ && pip --version && python -c "import setuptools; print(setuptools.__version__)"
+
+WORKDIR /opt/lam-lock
+COPY constraints-lam-torch.txt requirements-lam-core.lock ./
+
+# Step 1: torch tier. --index-url, not --extra-index-url: the PyTorch index
+# mirrors unrelated PyPI packages, and mixing the two indexes pulled colorama,
+# Jinja2 and MarkupSafe from download.pytorch.org during L0.
+# The constraints file pins torch's own transitive deps; without it this step
+# floats and the closure is not reproducible.
+RUN pip install --no-cache-dir torch==2.1.2 torchaudio==2.1.2 \
+      --index-url https://download.pytorch.org/whl/cu121 \
+      -c constraints-lam-torch.txt \
+ && python -c "import torch; print(torch.__version__, torch.version.cuda); \
+assert torch.__version__ == '2.1.2+cu121', torch.__version__"
+
+# torchvision is deliberately NOT installed. install_cu121.sh installs 0.16.2
+# but no file in the inference closure imports it.
+
+# Step 2: application tier, from PyPI.
+RUN pip install --no-cache-dir -r requirements-lam-core.lock
+
+# The demo stack is deliberately absent: gradio, omegaconf, spaces, patool,
+# opencv-python-headless, mmcv and wheels/gradio_gaussian_render-0.0.3. Each was
+# traced to app_lam_audio2exp.py alone, or to no import site at all.
+
+RUN git clone https://github.com/aigc3d/LAM_Audio2Expression.git /opt/lam \
+ && git -C /opt/lam checkout ${LAM_SHA} \
+ && git -C /opt/lam rev-parse HEAD | tee /opt/lam-source-sha.txt \
+ && test "$(git -C /opt/lam rev-parse HEAD)" = "${LAM_SHA}"
+
+WORKDIR /opt/lam
+
+# Weights are NOT baked in. They are 406 MB across two revisions-pinned tars at
+# 3DAIGC/LAM_audio2exp@0fe5f4dbb283ec7d9c01688681e6e4b6ac314858 and belong on a
+# mount, so the image stays reproducible independently of them.
+
+RUN pip check && python - <<'PY'
+import importlib
+for m in ("torch","torchaudio","transformers","librosa","numpy","scipy",
+          "regex","tqdm","addict","yapf","termcolor",
+          "utils.config","models.utils","models.network","engines.infer"):
+    importlib.import_module(m)
+from models.utils import ARKitBlendShape
+assert len(ARKitBlendShape) == 52, len(ARKitBlendShape)
+assert ARKitBlendShape.index("jawOpen") == 24
+print("import gate OK, 52 channels, jawOpen at 24")
+PY
+
+# Inference is not deterministic as shipped: the config leaves seed unset and
+# engines/defaults.py substitutes a pid/wall-clock/urandom seed. Pass
+# --options seed=<int> for a reproducible run. Only the eye-blink channels
+# (8, 9) are affected; jawOpen (24) is not.
+CMD ["/bin/bash"]

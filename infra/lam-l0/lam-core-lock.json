@@ -1,0 +1,437 @@
+{
+  "generated": "2026-09-04",
+  "resolver": {
+    "python_version": "3.10",
+    "platform_tags": "linux_x86_64 + manylinux* x86_64 + any",
+    "only_binary": true,
+    "note": "resolved from a Windows/CPython-3.11 pip using --python-version/--platform; no CPython 3.10 interpreter was executed, so these versions are resolver-derived for the target, not measured on it"
+  },
+  "install_semantics": {
+    "step_1": "pip install torch==2.1.2 torchaudio==2.1.2 --index-url https://download.pytorch.org/whl/cu121",
+    "step_2": "pip install -r requirements-lam-core.lock",
+    "local_version_suffix": "+cu121 is carried in the distribution version itself (torch-2.1.2+cu121-cp310-cp310-linux_x86_64.whl), it is not synthesised by pip; it comes from index selection",
+    "torchvision": "installed by the upstream script but never imported by the inference closure \u2014 excluded from CORE, kept in FULL_UPSTREAM_DELTA"
+  },
+  "overlap_between_passes": {
+    "filelock": {
+      "torch_index": "3.32.3",
+      "pypi": "3.32.5",
+      "effective": "3.32.5",
+      "note": "pass B (PyPI) installs second and wins"
+    },
+    "fsspec": {
+      "torch_index": "2026.7.0",
+      "pypi": "2026.7.0",
+      "effective": "2026.7.0",
+      "note": "identical"
+    },
+    "typing_extensions": {
+      "torch_index": "4.16.0",
+      "pypi": "4.16.0",
+      "effective": "4.16.0",
+      "note": "identical"
+    }
+  },
+  "counts": {
+    "TORCH_INDEX_PACKAGES": 10,
+    "PYPI_PACKAGES": 42,
+    "TOTAL_DISTINCT": 49,
+    "TOP_LEVEL_PINS": 11,
+    "TRANSITIVE_PINS": 38,
+    "UNPINNED_PYTHON_DISTRIBUTIONS": 0
+  },
+  "distributions": {
+    "addict": {
+      "version": "2.4.0",
+      "tier": "PYPI",
+      "top_level": true,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "addict",
+      "wheel": "addict-2.4.0-py3-none-any.whl"
+    },
+    "audioread": {
+      "version": "3.1.0",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "librosa -> audioread",
+      "wheel": "audioread-3.1.0-py3-none-any.whl"
+    },
+    "certifi": {
+      "version": "2026.7.22",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "transformers -> tokenizers -> huggingface_hub -> requests -> certifi",
+      "wheel": "certifi-2026.7.22-py3-none-any.whl"
+    },
+    "cffi": {
+      "version": "2.1.1",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "librosa -> soundfile -> cffi",
+      "wheel": "cffi-2.1.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
+    },
+    "charset-normalizer": {
+      "version": "3.5.1",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "transformers -> tokenizers -> huggingface_hub -> requests -> charset-normalizer",
+      "wheel": "charset_normalizer-3.5.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl"
+    },
+    "cloudpickle": {
+      "version": "3.1.2",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "librosa -> joblib -> cloudpickle",
+      "wheel": "cloudpickle-3.1.2-py3-none-any.whl"
+    },
+    "colorama": {
+      "version": "0.4.6",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "tqdm -> colorama",
+      "wheel": "colorama-0.4.6-py2.py3-none-any.whl"
+    },
+    "decorator": {
+      "version": "5.3.1",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "librosa -> decorator",
+      "wheel": "decorator-5.3.1-py3-none-any.whl"
+    },
+    "filelock": {
+      "version": "3.32.5",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "transformers -> tokenizers -> huggingface_hub -> filelock",
+      "wheel": "filelock-3.32.5-py3-none-any.whl"
+    },
+    "fsspec": {
+      "version": "2026.7.0",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "transformers -> tokenizers -> huggingface_hub -> fsspec",
+      "wheel": "fsspec-2026.7.0-py3-none-any.whl"
+    },
+    "huggingface_hub": {
+      "version": "0.36.2",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "transformers -> tokenizers -> huggingface_hub",
+      "wheel": "huggingface_hub-0.36.2-py3-none-any.whl"
+    },
+    "idna": {
+      "version": "3.19",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "transformers -> tokenizers -> huggingface_hub -> requests -> idna",
+      "wheel": "idna-3.19-py3-none-any.whl"
+    },
+    "importlib_metadata": {
+      "version": "9.0.1",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "yapf -> importlib_metadata",
+      "wheel": "importlib_metadata-9.0.1-py3-none-any.whl"
+    },
+    "Jinja2": {
+      "version": "3.1.6",
+      "tier": "TORCH_INDEX",
+      "top_level": false,
+      "index_host": "download.pytorch.org",
+      "why_present": "torch -> Jinja2",
+      "wheel": "jinja2-3.1.6-py3-none-any.whl"
+    },
+    "joblib": {
+      "version": "1.6.0",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "librosa -> joblib",
+      "wheel": "joblib-1.6.0-py3-none-any.whl"
+    },
+    "lazy-loader": {
+      "version": "0.5",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "librosa -> lazy-loader",
+      "wheel": "lazy_loader-0.5-py3-none-any.whl"
+    },
+    "librosa": {
+      "version": "0.11.0",
+      "tier": "PYPI",
+      "top_level": true,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "librosa",
+      "wheel": "librosa-0.11.0-py3-none-any.whl"
+    },
+    "llvmlite": {
+      "version": "0.49.0",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "librosa -> numba -> llvmlite",
+      "wheel": "llvmlite-0.49.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
+    },
+    "MarkupSafe": {
+      "version": "3.0.3",
+      "tier": "TORCH_INDEX",
+      "top_level": false,
+      "index_host": "download.pytorch.org",
+      "why_present": "torch -> Jinja2 -> MarkupSafe",
+      "wheel": "markupsafe-3.0.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl"
+    },
+    "mpmath": {
+      "version": "1.3.0",
+      "tier": "TORCH_INDEX",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "torch -> sympy -> mpmath",
+      "wheel": "mpmath-1.3.0-py3-none-any.whl"
+    },
+    "msgpack": {
+      "version": "1.2.2",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "librosa -> msgpack",
+      "wheel": "msgpack-1.2.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl"
+    },
+    "networkx": {
+      "version": "3.4.2",
+      "tier": "TORCH_INDEX",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "torch -> networkx",
+      "wheel": "networkx-3.4.2-py3-none-any.whl"
+    },
+    "numba": {
+      "version": "0.67.0",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "librosa -> numba",
+      "wheel": "numba-0.67.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
+    },
+    "numpy": {
+      "version": "1.26.3",
+      "tier": "PYPI",
+      "top_level": true,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "numpy",
+      "wheel": "numpy-1.26.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+    },
+    "packaging": {
+      "version": "26.3",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "transformers -> tokenizers -> huggingface_hub -> packaging",
+      "wheel": "packaging-26.3-py3-none-any.whl"
+    },
+    "platformdirs": {
+      "version": "4.11.7",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "librosa -> pooch -> platformdirs",
+      "wheel": "platformdirs-4.11.7-py3-none-any.whl"
+    },
+    "pooch": {
+      "version": "1.9.0",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "librosa -> pooch",
+      "wheel": "pooch-1.9.0-py3-none-any.whl"
+    },
+    "pycparser": {
+      "version": "3.0",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "librosa -> soundfile -> cffi -> pycparser",
+      "wheel": "pycparser-3.0-py3-none-any.whl"
+    },
+    "PyYAML": {
+      "version": "6.0.3",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "transformers -> tokenizers -> huggingface_hub -> PyYAML",
+      "wheel": "pyyaml-6.0.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl"
+    },
+    "regex": {
+      "version": "2026.9.3",
+      "tier": "PYPI",
+      "top_level": true,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "regex",
+      "wheel": "regex-2026.9.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
+    },
+    "requests": {
+      "version": "2.34.2",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "transformers -> tokenizers -> huggingface_hub -> requests",
+      "wheel": "requests-2.34.2-py3-none-any.whl"
+    },
+    "safetensors": {
+      "version": "0.8.0",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "transformers -> safetensors",
+      "wheel": "safetensors-0.8.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+    },
+    "scikit-learn": {
+      "version": "1.7.2",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "librosa -> scikit-learn",
+      "wheel": "scikit_learn-1.7.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
+    },
+    "scipy": {
+      "version": "1.15.3",
+      "tier": "PYPI",
+      "top_level": true,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "scipy",
+      "wheel": "scipy-1.15.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+    },
+    "soundfile": {
+      "version": "0.14.0",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "librosa -> soundfile",
+      "wheel": "soundfile-0.14.0-py2.py3-none-manylinux_2_28_x86_64.whl"
+    },
+    "soxr": {
+      "version": "1.1.0",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "librosa -> soxr",
+      "wheel": "soxr-1.1.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl"
+    },
+    "sympy": {
+      "version": "1.14.0",
+      "tier": "TORCH_INDEX",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "torch -> sympy",
+      "wheel": "sympy-1.14.0-py3-none-any.whl"
+    },
+    "termcolor": {
+      "version": "3.0.1",
+      "tier": "PYPI",
+      "top_level": true,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "termcolor",
+      "wheel": "termcolor-3.0.1-py3-none-any.whl"
+    },
+    "threadpoolctl": {
+      "version": "3.6.0",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "librosa -> scikit-learn -> threadpoolctl",
+      "wheel": "threadpoolctl-3.6.0-py3-none-any.whl"
+    },
+    "tokenizers": {
+      "version": "0.15.2",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "transformers -> tokenizers",
+      "wheel": "tokenizers-0.15.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+    },
+    "tomli": {
+      "version": "2.4.1",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "yapf -> tomli",
+      "wheel": "tomli-2.4.1-py3-none-any.whl"
+    },
+    "torch": {
+      "version": "2.1.2+cu121",
+      "tier": "TORCH_INDEX",
+      "top_level": true,
+      "index_host": "download-r2.pytorch.org",
+      "why_present": "torch",
+      "wheel": "torch-2.1.2%2Bcu121-cp310-cp310-linux_x86_64.whl"
+    },
+    "torchaudio": {
+      "version": "2.1.2+cu121",
+      "tier": "TORCH_INDEX",
+      "top_level": true,
+      "index_host": "download-r2.pytorch.org",
+      "why_present": "torchaudio",
+      "wheel": "torchaudio-2.1.2%2Bcu121-cp310-cp310-linux_x86_64.whl"
+    },
+    "tqdm": {
+      "version": "4.70.0",
+      "tier": "PYPI",
+      "top_level": true,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "tqdm",
+      "wheel": "tqdm-4.70.0-py3-none-any.whl"
+    },
+    "transformers": {
+      "version": "4.36.2",
+      "tier": "PYPI",
+      "top_level": true,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "transformers",
+      "wheel": "transformers-4.36.2-py3-none-any.whl"
+    },
+    "typing_extensions": {
+      "version": "4.16.0",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "transformers -> tokenizers -> huggingface_hub -> typing_extensions",
+      "wheel": "typing_extensions-4.16.0-py3-none-any.whl"
+    },
+    "urllib3": {
+      "version": "2.7.0",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "transformers -> tokenizers -> huggingface_hub -> requests -> urllib3",
+      "wheel": "urllib3-2.7.0-py3-none-any.whl"
+    },
+    "yapf": {
+      "version": "0.40.1",
+      "tier": "PYPI",
+      "top_level": true,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "yapf",
+      "wheel": "yapf-0.40.1-py3-none-any.whl"
+    },
+    "zipp": {
+      "version": "4.1.0",
+      "tier": "PYPI",
+      "top_level": false,
+      "index_host": "files.pythonhosted.org",
+      "why_present": "yapf -> importlib_metadata -> zipp",
+      "wheel": "zipp-4.1.0-py3-none-any.whl"
+    }
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "generated": "2026-09-04",
+  "source": "configs/lam_audio2exp_config_streaming.py at LAM sha 02a703c3ea7d8e360eb43098eca85ee98a083529, read back through the project's own Config parser in an isolated environment",
+  "entrypoint": {
+    "MINIMUM_RAW_INFERENCE": "inference_streaming_audio.py",
+    "why": "librosa.load -> 1 s chunks -> infer_streaming_audio -> np.concatenate -> export_blendshape_animation. No torch.distributed launch, no renderer, no UI.",
+    "alternative": "inference.py reaches the same model but goes through engines/launch.py, which pulls torch.distributed even for a single process."
+  },
+  "io_contract": {
+    "INPUT_SR": 16000,
+    "input_load": "librosa.load(cfg.audio_input, sr=16000) — resamples whatever is on disk",
+    "chunk_samples": 16000,
+    "chunk_seconds": 1.0,
+    "OUTPUT_CHANNEL_COUNT": 52,
+    "OUTPUT_FPS": 30.0,
+    "output_shape": "(num_frames, 52), float",
+    "output_format": "JSON via export_blendshape_animation, which raises unless shape[1] == 52",
+    "JAWOPEN_CHANNEL_INDEX": 24,
+    "JAWOPEN_CHANNEL_NAME": "jawOpen",
+    "channel_order_provenance": "measured — models/utils.py ARKitBlendShape, read in the validation environment"
+  },
+  "frozen_config_values": {
+    "audio_sr": 16000,
+    "fps": 30.0,
+    "id_idx": 0,
+    "movement_smooth": false,
+    "brow_movement": false,
+    "expression_dim": 52,
+    "num_identity_classes": 12,
+    "identity_feat_dim": 64,
+    "hidden_dim": 512,
+    "norm_type": "ln",
+    "use_transformer": false,
+    "num_attention_heads": 8,
+    "num_transformer_layers": 6,
+    "pretrained_encoder_type": "wav2vec",
+    "pretrained_encoder_path": "facebook/wav2vec2-base-960h",
+    "wav2vec2_config_path": "configs/wav2vec2_config.json",
+    "weight": "pretrained_models/lam_audio2exp_streaming.tar",
+    "infer.type": "Audio2ExpressionInfer",
+    "max_frame_length": 64,
+    "max_frame_length_note": "hard-coded in engines/infer.py:166, not configurable"
+  },
+  "determinism": {
+    "DETERMINISTIC": false,
+    "seed_in_config": null,
+    "what_happens": "engines/defaults.py:115 replaces a null seed with get_random_seed(), which is os.getpid() + wall-clock microseconds + 2 bytes of os.urandom. set_seed then seeds random, numpy, torch and torch.cuda, and sets cudnn.deterministic = True.",
+    "consequence": "the network forward pass is deterministic under torch.no_grad(), but the post-processing draws from numpy's global RNG, so two runs over the same audio produce different eye-blink timing and intensity.",
+    "stochastic_sites": [
+      "models/utils.py:233-242  apply_random_eye_blinks — np.random.uniform, np.random.randint",
+      "models/utils.py:278-303  apply_random_eye_blinks_context — np.random.randint, np.random.uniform",
+      "models/utils.py:716-749  apply_random_brow_movement — not reached, brow_movement is false"
+    ],
+    "fix_for_L1": "pass --options seed=<int> (default_config_parser merges options before the null check), or set seed in the config. Not changed at L0.",
+    "affected_channels": "8 (eyeBlinkLeft) and 9 (eyeBlinkRight). jawOpen (24) is not touched by any random path."
+  },
+  "post_processing_pipeline": {
+    "order": [
+      "smooth_mouth_movements(expression, processed_frames, audio_volume)",
+      "apply_frame_blending(expression, processed_frames)",
+      "apply_savitzky_golay_smoothing(expression, window_length=5)",
+      "symmetrize_blendshapes(expression)",
+      "apply_random_eye_blinks_context(expression, processed_frames)"
+    ],
+    "source": "engines/infer.py:250-257, order is load-bearing per its own comment"
+  },
+  "silence_handling": {
+    "detector": "librosa.feature.rms(y=audio, frame_length=min(int(sr/30), len(audio)), hop_length=int(sr/30))",
+    "silence_threshold": 0.001,
+    "min_silence_duration_frames": 7,
+    "blend_window_frames": 3,
+    "action": "the 29 MOUTH_BLENDSHAPES channels are multiplied by 0.1 inside detected silent regions, with a 3-frame blend at each boundary"
+  },
+  "range_and_clamping": {
+    "clamp": "np.clip(smoothed, 0.0, 1.0) inside apply_savitzky_golay_smoothing (models/utils.py:436)",
+    "position_in_pipeline": "step 3 of 5",
+    "caveat": "two steps run after the clamp. symmetrize_blendshapes averages pairs, which cannot exceed the range. apply_random_eye_blinks_context writes pattern * intensity with intensity <= 1.0 into channels 8 and 9. So the effective range is [0, 1], but it is not enforced by a final clamp.",
+    "savgol": { "window_length": 5, "polyorder": "function default", "mode": "mirror" }
+  },
+  "blink_parameters": {
+    "intensity_range": [0.8, 1.0],
+    "min_blink_interval_frames": 40,
+    "max_blink_interval_frames": 100,
+    "pattern_count": 4,
+    "minimum_remaining_frames": 8
+  },
+  "streaming_state": {
+    "context_keys": ["is_initial_input", "previous_audio", "previous_expression", "previous_volume", "first_input_flag"],
+    "carry_length_frames": 64,
+    "first_chunk": "left-padded with zeros to 64 frames worth of audio",
+    "later_chunks": "left-padded with the tail of the previous chunk's audio"
+  },
+  "known_defects_not_fixed_at_L0": [
+    "engines/infer.py:206 is a bare `except:` that then references output_dict, which is unbound if the model call itself raised, and returns None instead of the (dict, context) tuple the caller unpacks. A model failure therefore surfaces as a confusing TypeError or UnboundLocalError.",
+    "engines/infer.py:200-203 calls .cuda(non_blocking=True) unconditionally, so this path cannot run on CPU without a source change."
+  ]
+}

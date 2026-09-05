@@ -1,0 +1,199 @@
+{
+  "canonicalSourceCommit": "b295c1cc20f117b18c7ef2d916ded6aec549f565",
+  "cases": [
+    {
+      "text": "안녕하세요",
+      "timeline": {
+        "frames": [
+          {
+            "charIndex": 0,
+            "viseme": "a"
+          },
+          {
+            "charIndex": 1,
+            "viseme": "e"
+          },
+          {
+            "charIndex": 2,
+            "viseme": "a"
+          },
+          {
+            "charIndex": 3,
+            "viseme": "e"
+          },
+          {
+            "charIndex": 4,
+            "viseme": "o"
+          }
+        ],
+        "textLength": 5
+      }
+    },
+    {
+      "text": "반갑습니다 김범석입니다",
+      "timeline": {
+        "frames": [
+          {
+            "charIndex": 0,
+            "viseme": "m"
+          },
+          {
+            "charIndex": 0,
+            "viseme": "a"
+          },
+          {
+            "charIndex": 1,
+            "viseme": "m"
+          },
+          {
+            "charIndex": 2,
+            "viseme": "u"
+          },
+          {
+            "charIndex": 2,
+            "viseme": "m"
+          },
+          {
+            "charIndex": 3,
+            "viseme": "i"
+          },
+          {
+            "charIndex": 4,
+            "viseme": "a"
+          },
+          {
+            "charIndex": 6,
+            "viseme": "i"
+          },
+          {
+            "charIndex": 6,
+            "viseme": "m"
+          },
+          {
+            "charIndex": 7,
+            "viseme": "e"
+          },
+          {
+            "charIndex": 7,
+            "viseme": "m"
+          },
+          {
+            "charIndex": 8,
+            "viseme": "e"
+          },
+          {
+            "charIndex": 9,
+            "viseme": "i"
+          },
+          {
+            "charIndex": 9,
+            "viseme": "m"
+          },
+          {
+            "charIndex": 10,
+            "viseme": "i"
+          },
+          {
+            "charIndex": 11,
+            "viseme": "a"
+          }
+        ],
+        "textLength": 12
+      }
+    },
+    {
+      "text": "ARMI 프로젝트",
+      "timeline": {
+        "frames": [
+          {
+            "charIndex": 0,
+            "viseme": "a"
+          },
+          {
+            "charIndex": 2,
+            "viseme": "m"
+          },
+          {
+            "charIndex": 3,
+            "viseme": "i"
+          },
+          {
+            "charIndex": 5,
+            "viseme": "m"
+          },
+          {
+            "charIndex": 5,
+            "viseme": "u"
+          },
+          {
+            "charIndex": 6,
+            "viseme": "o"
+          },
+          {
+            "charIndex": 7,
+            "viseme": "e"
+          },
+          {
+            "charIndex": 8,
+            "viseme": "u"
+          }
+        ],
+        "textLength": 9
+      }
+    },
+    {
+      "text": "hello world",
+      "timeline": {
+        "frames": [
+          {
+            "charIndex": 1,
+            "viseme": "e"
+          },
+          {
+            "charIndex": 4,
+            "viseme": "o"
+          }
+        ],
+        "textLength": 11
+      }
+    },
+    {
+      "text": "맘마",
+      "timeline": {
+        "frames": [
+          {
+            "charIndex": 0,
+            "viseme": "m"
+          },
+          {
+            "charIndex": 0,
+            "viseme": "a"
+          },
+          {
+            "charIndex": 0,
+            "viseme": "m"
+          },
+          {
+            "charIndex": 1,
+            "viseme": "a"
+          }
+        ],
+        "textLength": 2
+      }
+    },
+    {
+      "text": "",
+      "timeline": {
+        "frames": [],
+        "textLength": 0
+      }
+    },
+    {
+      "text": "ㅇㅋ",
+      "timeline": {
+        "frames": [],
+        "textLength": 2
+      }
+    }
+  ]
+}
